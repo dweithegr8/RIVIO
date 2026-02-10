@@ -3,34 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Mail\NewFeedbackNotification;
+use App\Mail\FeedbackConfirmation;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Feedback;
 use App\Http\Controllers\SettingsController;
+use App\Http\Requests\StoreFeedbackRequest;
+use App\Http\Requests\UpdateFeedbackStatusRequest;
+use App\Http\Resources\FeedbackResource;
+use App\Services\FeedbackCacheService;
+use App\Jobs\SendFeedbackNotificationEmail;
 
 class FeedbackController extends Controller
 {
-    /**
-     * Transform a feedback model for API response (add status, date alias).
-     */
-    private function transformFeedback(Feedback $feedback): array
-    {
-        return [
-            'id' => $feedback->id,
-            'name' => $feedback->name,
-            'email' => $feedback->email,
-            'message' => $feedback->message,
-            'comment' => $feedback->message,
-            'rating' => (int) $feedback->rating,
-            'is_approved' => (bool) $feedback->is_approved,
-            'status' => $feedback->is_approved ? 'approved' : 'pending',
-            'created_at' => $feedback->created_at?->format('c'),
-            'date' => $feedback->created_at?->format('c'),
-            'updated_at' => $feedback->updated_at?->format('c'),
-        ];
-    }
-
     /**
      * List all feedback (admin). Supports limit, sort, order for dashboard.
      */
@@ -38,17 +24,26 @@ class FeedbackController extends Controller
     {
         $sort = $request->query('sort', 'date');
         $order = strtolower($request->query('order', 'desc')) === 'asc' ? 'asc' : 'desc';
-        $limit = $request->query('limit');
+        $limit = (int) ($request->query('limit') ?? 15);
+        $page = (int) ($request->query('page') ?? 1);
 
         $column = $sort === 'rating' ? 'rating' : 'created_at';
-        $query = Feedback::orderBy($column, $order);
+        
+        // Paginate instead of just limit
+        $paginated = Feedback::orderBy($column, $order)
+            ->paginate($limit, ['*'], 'page', $page);
 
-        if ($limit && (int) $limit > 0) {
-            $query->limit((int) $limit);
-        }
-
-        $items = $query->get();
-        return response()->json($items->map(fn (Feedback $f) => $this->transformFeedback($f)));
+        return response()->json([
+            'data' => FeedbackResource::collection($paginated->items()),
+            'pagination' => [
+                'total' => $paginated->total(),
+                'per_page' => $paginated->perPage(),
+                'current_page' => $paginated->currentPage(),
+                'last_page' => $paginated->lastPage(),
+                'from' => $paginated->firstItem(),
+                'to' => $paginated->lastItem(),
+            ],
+        ]);
     }
 
     /**
@@ -58,88 +53,131 @@ class FeedbackController extends Controller
     {
         $sort = $request->query('sort', 'date');
         $order = strtolower($request->query('order', 'desc')) === 'asc' ? 'asc' : 'desc';
-        $limit = $request->query('limit');
+        $limit = (int) ($request->query('limit') ?? 10);
+        $page = (int) ($request->query('page') ?? 1);
 
         $column = $sort === 'rating' ? 'rating' : 'created_at';
-        $query = Feedback::where('is_approved', true)->orderBy($column, $order);
+        
+        // Paginate approved feedback
+        $paginated = Feedback::where('is_approved', true)
+            ->orderBy($column, $order)
+            ->paginate($limit, ['*'], 'page', $page);
 
-        if ($limit && (int) $limit > 0) {
-            $query->limit((int) $limit);
-        }
-
-        $items = $query->get();
-        return response()->json($items->map(fn (Feedback $f) => $this->transformFeedback($f)));
+        return response()->json([
+            'data' => FeedbackResource::collection($paginated->items()),
+            'pagination' => [
+                'total' => $paginated->total(),
+                'per_page' => $paginated->perPage(),
+                'current_page' => $paginated->currentPage(),
+                'last_page' => $paginated->lastPage(),
+                'from' => $paginated->firstItem(),
+                'to' => $paginated->lastItem(),
+            ],
+        ]);
     }
 
     /**
      * Store new feedback. Enforces allowAnonymousReviews and sends email if enableEmailNotifications.
      */
-    public function store(Request $request)
+    public function store(StoreFeedbackRequest $request)
     {
-        $settings = SettingsController::getMerged();
-        $allowAnonymous = $settings['allowAnonymousReviews'] ?? true;
+        try {
+            $settings = SettingsController::getMerged();
+            $allowAnonymous = $settings['allowAnonymousReviews'] ?? true;
+            $validated = $request->validated();
 
-        $rules = [
-            'name' => [$allowAnonymous ? 'nullable' : 'required', 'string', 'max:255', 'min:2'],
-            'email' => [$allowAnonymous ? 'nullable' : 'required', 'string', 'email', 'max:255'],
-            'message' => ['nullable', 'string', 'min:10', 'max:1000'],
-            'comment' => ['nullable', 'string', 'min:10', 'max:1000'],
-            'rating' => ['required', 'integer', 'min:1', 'max:5'],
-        ];
-
-        $validated = $request->validate($rules);
-
-        $message = $validated['message'] ?? $validated['comment'] ?? $request->input('comment', '');
-        if (strlen($message) < 10) {
-            return response()->json(['message' => 'The feedback text must be at least 10 characters.'], 422);
-        }
-
-        if (! $allowAnonymous) {
-            $name = trim($request->input('name', ''));
-            if (strlen($name) < 2) {
-                return response()->json(['message' => 'Name is required and must be at least 2 characters.'], 422);
+            $message = $validated['message'] ?? $validated['comment'] ?? $request->input('comment', '');
+            if (strlen($message) < 10) {
+                return response()->json([
+                    'message' => 'Validation failed.',
+                    'errors' => ['message' => ['The feedback text must be at least 10 characters.']],
+                ], 422);
             }
-            $email = trim($request->input('email', ''));
-            if (! $email || ! filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                return response()->json(['message' => 'A valid email address is required.'], 422);
-            }
-        }
 
-        $feedback = Feedback::create([
-            'name' => $request->input('name') ?? 'Anonymous',
-            'email' => $request->input('email') ?? '',
-            'message' => $message,
-            'rating' => (int) ($validated['rating'] ?? $request->input('rating', 0)),
-        ]);
-
-        if (! empty($settings['enableEmailNotifications'])) {
-            $to = $settings['notification_email'] ?? config('mail.from.address');
-            if ($to) {
-                try {
-                    Mail::to($to)->send(new NewFeedbackNotification($feedback));
-                } catch (\Throwable $e) {
-                    report($e);
+            if (!$allowAnonymous) {
+                $name = trim($request->input('name', ''));
+                if (strlen($name) < 2) {
+                    return response()->json([
+                        'message' => 'Validation failed.',
+                        'errors' => ['name' => ['Name is required and must be at least 2 characters.']],
+                    ], 422);
+                }
+                $email = trim($request->input('email', ''));
+                if (!$email || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    return response()->json([
+                        'message' => 'Validation failed.',
+                        'errors' => ['email' => ['A valid email address is required.']],
+                    ], 422);
                 }
             }
-        }
 
-        return response()->json($this->transformFeedback($feedback), 201);
+            $feedback = Feedback::create([
+                'name' => $request->input('name') ?? 'Anonymous',
+                'email' => $request->input('email') ?? '',
+                'message' => $message,
+                'rating' => (int) ($validated['rating'] ?? $request->input('rating', 0)),
+            ]);
+
+            // Invalidate stats cache
+            FeedbackCacheService::invalidate();
+
+            // Send email notification asynchronously if enabled (admin)
+            if (!empty($settings['enableEmailNotifications'])) {
+                $to = $settings['notification_email'] ?? config('mail.from.address');
+                if ($to) {
+                    SendFeedbackNotificationEmail::dispatch($feedback, $to);
+                }
+            }
+
+            // Queue a confirmation email to the submitter if they provided an email
+            if (!empty($feedback->email)) {
+                try {
+                    Mail::to($feedback->email)->queue(new FeedbackConfirmation($feedback));
+                    \Illuminate\Support\Facades\Log::info('Feedback confirmation queued', [
+                        'feedback_id' => $feedback->id,
+                        'recipient' => $feedback->email,
+                    ]);
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::error('Failed to queue feedback confirmation', [
+                        'feedback_id' => $feedback->id,
+                        'recipient' => $feedback->email,
+                        'error' => $e->getMessage(),
+                    ]);
+                }
+            }
+
+            return response()->json(new FeedbackResource($feedback), 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'An error occurred while storing feedback.',
+            ], 500);
+        }
     }
 
     /**
      * Update feedback status (approve / pending).
      */
-    public function updateStatus(Request $request, int $id)
+    public function updateStatus(UpdateFeedbackStatusRequest $request, int $id)
     {
-        $validated = $request->validate([
-            'status' => ['required', 'string', 'in:approved,pending,hidden'],
-        ]);
+        try {
+            $validated = $request->validated();
+            $feedback = Feedback::findOrFail($id);
+            $feedback->is_approved = ($validated['status'] === 'approved');
+            $feedback->save();
 
-        $feedback = Feedback::findOrFail($id);
-        $feedback->is_approved = ($validated['status'] === 'approved');
-        $feedback->save();
+            // Invalidate stats cache
+            FeedbackCacheService::invalidate();
 
-        return response()->json($this->transformFeedback($feedback->fresh()));
+            return response()->json(new FeedbackResource($feedback->fresh()));
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Feedback not found.',
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'An error occurred while updating feedback.',
+            ], 500);
+        }
     }
 
     /**
@@ -147,9 +185,23 @@ class FeedbackController extends Controller
      */
     public function destroy(int $id)
     {
-        $feedback = Feedback::findOrFail($id);
-        $feedback->delete();
-        return response()->json(['message' => 'Feedback deleted'], 200);
+        try {
+            $feedback = Feedback::findOrFail($id);
+            $feedback->delete();
+
+            // Invalidate stats cache
+            FeedbackCacheService::invalidate();
+
+            return response()->json(['message' => 'Feedback deleted successfully'], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Feedback not found.',
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'An error occurred while deleting feedback.',
+            ], 500);
+        }
     }
 
     /**
@@ -158,35 +210,12 @@ class FeedbackController extends Controller
      */
     public function stats()
     {
-        $total = Feedback::count();
-        $approved = Feedback::where('is_approved', true)->count();
-        $pending = Feedback::where('is_approved', false)->count();
-        $avgRating = (float) Feedback::avg('rating');
-
-        $now = Carbon::now();
-        $startThisWeek = $now->copy()->startOfWeek();
-        $startLastWeek = $now->copy()->subWeek()->startOfWeek();
-        $endLastWeek = $startThisWeek->copy()->subSecond();
-
-        $thisWeekFeedback = Feedback::where('created_at', '>=', $startThisWeek)->count();
-        $lastWeekFeedback = Feedback::whereBetween('created_at', [$startLastWeek, $endLastWeek])->count();
-
-        $responseRate = $total > 0 ? round($approved / $total * 100, 1) : 0;
-
-        return response()->json([
-            'total' => $total,
-            'approved' => $approved,
-            'pending' => $pending,
-            'average_rating' => round($avgRating, 2),
-            'totalFeedback' => $total,
-            'pendingReviews' => $pending,
-            'approvedReviews' => $approved,
-            'avgRating' => round($avgRating, 2),
-            'thisWeekFeedback' => $thisWeekFeedback,
-            'lastWeekFeedback' => $lastWeekFeedback,
-            'totalReviews' => $approved,
-            'totalUsers' => $total,
-            'responseRate' => $responseRate,
-        ]);
+        try {
+            return response()->json(FeedbackCacheService::getStats(), 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'An error occurred while retrieving statistics.',
+            ], 500);
+        }
     }
 }

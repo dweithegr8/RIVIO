@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Bell, User, X, LogOut, Settings, ChevronDown, Menu } from 'lucide-react';
+import { authAPI } from '../../services/api';
 
 const AdminHeader = ({ onMenuToggle }) => {
   const navigate = useNavigate();
@@ -31,12 +32,14 @@ const AdminHeader = ({ onMenuToggle }) => {
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
-      // API call would go here
-      // await authAPI.logout();
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await authAPI.logout();
+      localStorage.removeItem('auth_token');
       navigate('/admin/login');
     } catch (error) {
       console.error('Logout failed:', error);
+      // Still remove token and redirect even if API call fails
+      localStorage.removeItem('auth_token');
+      navigate('/admin/login');
     } finally {
       setIsLoggingOut(false);
     }

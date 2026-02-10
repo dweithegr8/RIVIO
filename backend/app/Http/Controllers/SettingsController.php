@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Setting;
+use App\Http\Requests\UpdateSettingsRequest;
 
 class SettingsController extends Controller
 {
@@ -30,10 +31,14 @@ class SettingsController extends Controller
      */
     public static function getMerged(): array
     {
-        $row = Setting::where('key', self::SETTINGS_KEY)->first();
-        $value = $row ? json_decode($row->value, true) : null;
-        $defaults = self::defaults();
-        return is_array($value) ? array_merge($defaults, $value) : $defaults;
+        try {
+            $row = Setting::where('key', self::SETTINGS_KEY)->first();
+            $value = $row ? json_decode($row->value, true) : null;
+            $defaults = self::defaults();
+            return is_array($value) ? array_merge($defaults, $value) : $defaults;
+        } catch (\Exception $e) {
+            return self::defaults();
+        }
     }
 
     /**
@@ -41,19 +46,25 @@ class SettingsController extends Controller
      */
     public function public(): \Illuminate\Http\JsonResponse
     {
-        $all = self::getMerged();
-        $keys = [
-            'enablePublicReviews',
-            'requireApproval',
-            'showRatingsBreakdown',
-            'allowAnonymousReviews',
-            'minimumRatingToShow',
-        ];
-        $public = [];
-        foreach ($keys as $key) {
-            $public[$key] = $all[$key] ?? self::defaults()[$key];
+        try {
+            $all = self::getMerged();
+            $keys = [
+                'enablePublicReviews',
+                'requireApproval',
+                'showRatingsBreakdown',
+                'allowAnonymousReviews',
+                'minimumRatingToShow',
+            ];
+            $public = [];
+            foreach ($keys as $key) {
+                $public[$key] = $all[$key] ?? self::defaults()[$key];
+            }
+            return response()->json($public, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'An error occurred while retrieving public settings.',
+            ], 500);
         }
-        return response()->json($public);
     }
 
     /**
@@ -61,49 +72,38 @@ class SettingsController extends Controller
      */
     public function index()
     {
-        $row = Setting::where('key', self::SETTINGS_KEY)->first();
-        $value = $row ? json_decode($row->value, true) : null;
-        $settings = is_array($value) ? array_merge(self::defaults(), $value) : self::defaults();
-        return response()->json($settings);
+        try {
+            $settings = self::getMerged();
+            return response()->json($settings, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'An error occurred while retrieving settings.',
+            ], 500);
+        }
     }
 
     /**
      * PUT /api/settings - Update settings (from admin Settings page).
      */
-    public function update(Request $request)
+    public function update(UpdateSettingsRequest $request)
     {
-        $allowed = [
-            'enablePublicReviews',
-            'requireApproval',
-            'enableEmailNotifications',
-            'showRatingsBreakdown',
-            'allowAnonymousReviews',
-            'minimumRatingToShow',
-            'notification_email',
-        ];
+        try {
+            $validated = $request->validated();
 
-        $input = $request->only($allowed);
-        $input = array_filter($input, fn ($v) => $v !== null);
+            $row = Setting::where('key', self::SETTINGS_KEY)->first();
+            $current = $row ? json_decode($row->value, true) : null;
+            $merged = is_array($current) ? array_merge(self::defaults(), $current, $validated) : array_merge(self::defaults(), $validated);
 
-        $request->validate([
-            'enablePublicReviews' => ['sometimes', 'boolean'],
-            'requireApproval' => ['sometimes', 'boolean'],
-            'enableEmailNotifications' => ['sometimes', 'boolean'],
-            'showRatingsBreakdown' => ['sometimes', 'boolean'],
-            'allowAnonymousReviews' => ['sometimes', 'boolean'],
-            'minimumRatingToShow' => ['sometimes', 'integer', 'min:1', 'max:5'],
-            'notification_email' => ['sometimes', 'nullable', 'email', 'max:255'],
-        ]);
+            Setting::updateOrCreate(
+                ['key' => self::SETTINGS_KEY],
+                ['value' => json_encode($merged)]
+            );
 
-        $row = Setting::where('key', self::SETTINGS_KEY)->first();
-        $current = $row ? json_decode($row->value, true) : null;
-        $merged = is_array($current) ? array_merge(self::defaults(), $current, $input) : array_merge(self::defaults(), $input);
-
-        Setting::updateOrCreate(
-            ['key' => self::SETTINGS_KEY],
-            ['value' => json_encode($merged)]
-        );
-
-        return response()->json($merged);
+            return response()->json($merged, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'An error occurred while updating settings.',
+            ], 500);
+        }
     }
 }

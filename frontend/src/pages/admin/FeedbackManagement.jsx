@@ -15,7 +15,7 @@ const FeedbackManagement = () => {
     setIsLoading(true);
     try {
       const response = await feedbackAPI.getAll();
-      setFeedbackList(response.data ?? []);
+      setFeedbackList(response.data?.data ?? response.data ?? []);
     } catch (error) {
       console.error('Failed to fetch feedback:', error);
       setFeedbackList([]);
@@ -187,20 +187,22 @@ const FeedbackManagement = () => {
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <StarRating rating={feedback.rating} readonly size="sm" />
+                        <StarRating rating={feedback.rating || 0} readonly size="sm" />
                       </td>
                       <td className="px-6 py-4 max-w-xs">
                         <p className="text-neutral-darkGray text-sm truncate" title={feedback.message || feedback.comment || ''}>
-                          {feedback.message || feedback.comment}
+                          {feedback.message || feedback.comment || 'No feedback'}
                         </p>
                       </td>
                       <td className="px-6 py-4">
                         <span className="text-sm text-neutral-slate">
-                          {new Date(feedback.created_at || feedback.date).toLocaleDateString('en-US', {
-                            month: 'short',
-                            day: 'numeric',
-                            year: 'numeric',
-                          })}
+                          {feedback.created_at || feedback.date
+                            ? new Date(feedback.created_at || feedback.date).toLocaleDateString('en-US', {
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric',
+                              })
+                            : 'N/A'}
                         </span>
                       </td>
                       <td className="px-6 py-4">{getStatusBadge(feedback.status)}</td>

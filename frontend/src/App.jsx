@@ -1,5 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
+// Common Components
+import ErrorBoundary from './components/common/ErrorBoundary';
+
 // User Portal Pages
 import Home from './pages/user/Home';
 import HowItWorks from './pages/user/HowItWorks';
@@ -18,25 +21,27 @@ import AdminLayout from './layouts/AdminLayout';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        {/* User Portal Routes */}
-        <Route path="/" element={<UserLayout />}>
-          <Route index element={<Home />} />
-          <Route path="how-it-works" element={<HowItWorks />} />
-          <Route path="submit-feedback" element={<FeedbackSubmission />} />
-          <Route path="reviews" element={<PublicReviews />} />
-        </Route>
+    <ErrorBoundary>
+      <Router>
+        <Routes>
+          {/* User Portal Routes */}
+          <Route path="/" element={<UserLayout />}>
+            <Route index element={<Home />} />
+            <Route path="how-it-works" element={<HowItWorks />} />
+            <Route path="submit-feedback" element={<FeedbackSubmission />} />
+            <Route path="reviews" element={<PublicReviews />} />
+          </Route>
 
-        {/* Admin Portal Routes */}
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="feedback" element={<FeedbackManagement />} />
-          <Route path="settings" element={<Settings />} />
-        </Route>
-      </Routes>
-    </Router>
+          {/* Admin Portal Routes */}
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="feedback" element={<FeedbackManagement />} />
+            <Route path="settings" element={<Settings />} />
+          </Route>
+        </Routes>
+      </Router>
+    </ErrorBoundary>
   );
 }
 

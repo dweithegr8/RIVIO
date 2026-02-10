@@ -2,15 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Routing\Controller as BaseController;
 
-class Controller
+class Controller extends BaseController
 {
-    public function store(Request $request)
-    {
-        Log::info('REQUEST DATA:', $request->all());
-
-        return response()->json(['ok' => true]);
-    }
+    use AuthorizesRequests, ValidatesRequests;
 }

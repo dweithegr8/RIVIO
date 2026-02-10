@@ -39,7 +39,7 @@ const PublicReviews = () => {
       setIsLoading(true);
       try {
         const response = await feedbackAPI.getApproved();
-        setReviews(response.data ?? []);
+        setReviews(response.data?.data ?? response.data ?? []);
       } catch (error) {
         console.error('Failed to fetch reviews:', error);
         setReviews([]);
@@ -248,20 +248,22 @@ const PublicReviews = () => {
                         </div>
                         <div>
                           <h4 className="font-semibold text-primary-dark">{review.name || 'Anonymous'}</h4>
-                          <StarRating rating={review.rating} readonly size="sm" />
+                          <StarRating rating={review.rating || 0} readonly size="sm" />
                         </div>
                       </div>
                       <div className="flex items-center gap-2 text-neutral-slate text-sm">
                         <Calendar className="w-4 h-4" />
-                        {new Date(review.created_at || review.date).toLocaleDateString('en-US', {
-                          month: 'long',
-                          day: 'numeric',
-                          year: 'numeric',
-                        })}
+                        {review.created_at || review.date
+                          ? new Date(review.created_at || review.date).toLocaleDateString('en-US', {
+                              month: 'long',
+                              day: 'numeric',
+                              year: 'numeric',
+                            })
+                          : 'N/A'}
                       </div>
                     </div>
                     <p className="text-neutral-darkGray leading-relaxed">
-                      "{review.message || review.comment}"
+                      "{review.message || review.comment || 'No comment'}"
                     </p>
                   </div>
                 ))}

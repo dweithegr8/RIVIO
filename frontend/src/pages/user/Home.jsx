@@ -51,7 +51,7 @@ const Home = () => {
           totalUsers: data.totalUsers ?? data.totalFeedback ?? 0,
           responseRate: data.responseRate ?? 0,
         });
-        setRecentReviews(reviewsResponse.data ?? []);
+        setRecentReviews(reviewsResponse.data?.data ?? reviewsResponse.data ?? []);
       } catch (error) {
         console.error('Failed to fetch data:', error);
       } finally {
@@ -217,7 +217,7 @@ const Home = () => {
               <div className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-2">
                   <Star className="w-8 h-8 fill-primary-orange text-primary-orange" />
-                  <span className="text-4xl font-bold text-primary-dark">{stats.avgRating || '-'}</span>
+                  <span className="text-4xl font-bold text-primary-dark">{stats.avgRating?.toFixed(1) || '-'}</span>
                 </div>
                 <p className="text-neutral-slate font-medium">Average Rating</p>
               </div>
@@ -225,7 +225,7 @@ const Home = () => {
               <div className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-2">
                   <MessageSquare className="w-8 h-8 text-primary-dark" />
-                  <span className="text-4xl font-bold text-primary-dark">{stats.totalReviews.toLocaleString()}</span>
+                  <span className="text-4xl font-bold text-primary-dark">{(stats.totalReviews || 0).toLocaleString()}</span>
                 </div>
                 <p className="text-neutral-slate font-medium">Total Reviews</p>
               </div>
@@ -233,7 +233,7 @@ const Home = () => {
               <div className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-2">
                   <Users className="w-8 h-8 text-primary-orange" />
-                  <span className="text-4xl font-bold text-primary-dark">{stats.totalUsers.toLocaleString()}</span>
+                  <span className="text-4xl font-bold text-primary-dark">{(stats.totalUsers || 0).toLocaleString()}</span>
                 </div>
                 <p className="text-neutral-slate font-medium">Happy Customers</p>
               </div>
@@ -241,7 +241,7 @@ const Home = () => {
               <div className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-2">
                   <TrendingUp className="w-8 h-8 text-primary-dark" />
-                  <span className="text-4xl font-bold text-primary-dark">{stats.responseRate}%</span>
+                  <span className="text-4xl font-bold text-primary-dark">{stats.responseRate || 0}%</span>
                 </div>
                 <p className="text-neutral-slate font-medium">Response Rate</p>
               </div>
@@ -294,22 +294,24 @@ const Home = () => {
                   .map((review) => (
                   <div key={review.id} className="card">
                     <div className="flex items-center justify-between mb-4">
-                      <StarRating rating={review.rating} readonly size="sm" />
+                      <StarRating rating={review.rating || 0} readonly size="sm" />
                       <span className="text-sm text-neutral-slate">
-                        {new Date(review.date || review.created_at).toLocaleDateString('en-US', {
-                          month: 'short',
-                          day: 'numeric',
-                          year: 'numeric',
-                        })}
+                        {review.created_at 
+                          ? new Date(review.created_at).toLocaleDateString('en-US', {
+                              month: 'short',
+                              day: 'numeric',
+                              year: 'numeric',
+                            })
+                          : 'N/A'}
                       </span>
                     </div>
                     <p className="text-neutral-darkGray mb-4 line-clamp-3">
-                      "{review.comment || review.message}"
+                      "{review.message || review.comment || 'No comment'}"
                     </p>
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-primary-orange/20 rounded-full flex items-center justify-center">
                         <span className="text-primary-orange font-semibold">
-                          {review.name ? review.name.charAt(0) : 'A'}
+                          {review.name ? review.name.charAt(0).toUpperCase() : 'A'}
                         </span>
                       </div>
                       <span className="font-medium text-primary-dark">{review.name || 'Anonymous'}</span>

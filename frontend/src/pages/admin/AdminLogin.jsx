@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Loader2, AlertCircle } from 'lucide-react';
+import { authAPI } from '../../services/api';
 
 const AdminLogin = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    username: '',
+    email: '',
     password: '',
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -16,8 +17,10 @@ const AdminLogin = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.username.trim()) {
-      newErrors.username = 'Username is required';
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email';
     }
 
     if (!formData.password) {
@@ -51,21 +54,24 @@ const AdminLogin = () => {
     setLoginError('');
 
     try {
-      // TODO: Replace with actual API call
-      // const response = await axios.post('/api/admin/login', formData);
-      
-      // Mock authentication
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      
-      // Mock success - redirect to dashboard
-      if (formData.username === 'admin' && formData.password === 'admin123') {
+      const response = await authAPI.login({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (response.data && response.data.token) {
+        // Store token in localStorage
+        localStorage.setItem('auth_token', response.data.token);
+        // Redirect to dashboard
         navigate('/admin/dashboard');
-      } else {
-        setLoginError('Invalid username or password');
       }
     } catch (error) {
       console.error('Login error:', error);
-      setLoginError('An error occurred. Please try again.');
+      if (error.response?.status === 422) {
+        setLoginError('Invalid email or password');
+      } else {
+        setLoginError(error.response?.data?.message || 'An error occurred. Please try again.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -99,24 +105,24 @@ const AdminLogin = () => {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Username */}
+            {/* Email */}
             <div className="space-y-2">
-              <label htmlFor="username" className="block text-sm font-semibold text-primary-dark">
-                Username
+              <label htmlFor="email" className="block text-sm font-semibold text-primary-dark">
+                Email
               </label>
               <input
-                type="text"
-                id="username"
-                placeholder="Enter your username"
-                value={formData.username}
-                onChange={(e) => handleChange('username', e.target.value)}
-                className={`input-field ${errors.username ? 'border-red-500 focus:ring-red-500' : ''}`}
-                autoComplete="username"
+                type="email"
+                id="email"
+                placeholder="Enter your email"
+                value={formData.email}
+                onChange={(e) => handleChange('email', e.target.value)}
+                className={`input-field ${errors.email ? 'border-red-500 focus:ring-red-500' : ''}`}
+                autoComplete="email"
               />
-              {errors.username && (
+              {errors.email && (
                 <p className="text-red-500 text-sm flex items-center gap-1">
                   <AlertCircle className="w-4 h-4" />
-                  {errors.username}
+                  {errors.email}
                 </p>
               )}
             </div>
@@ -186,7 +192,7 @@ const AdminLogin = () => {
           {/* Demo Credentials */}
           <div className="mt-6 p-4 bg-neutral-offWhite rounded-lg">
             <p className="text-xs text-neutral-slate text-center">
-              Demo credentials: <span className="font-mono">admin</span> / <span className="font-mono">admin123</span>
+              Demo credentials: <span className="font-mono">admin@example.com</span> / <span className="font-mono">password123</span>
             </p>
           </div>
         </div>

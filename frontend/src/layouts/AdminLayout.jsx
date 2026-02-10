@@ -1,15 +1,27 @@
 import { Outlet, Navigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AdminSidebar from '../components/admin/AdminSidebar';
 import AdminHeader from '../components/admin/AdminHeader';
 
 const AdminLayout = () => {
-  // Mock authentication state - replace with actual auth logic
-  const [isAuthenticated] = useState(true);
+  // Check for authentication token in localStorage
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    // Check if token exists in localStorage
+    const token = localStorage.getItem('auth_token');
+    setIsAuthenticated(!!token);
+    setIsLoading(false);
+  }, []);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
   const closeSidebar = () => setIsSidebarOpen(false);
+
+  if (isLoading) {
+    return <div className="flex items-center justify-center h-screen">Loading...</div>;
+  }
 
   if (!isAuthenticated) {
     return <Navigate to="/admin/login" replace />;

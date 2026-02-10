@@ -28,7 +28,7 @@ const Dashboard = () => {
           feedbackAPI.getAll({ limit: 5, sort: 'date', order: 'desc' }),
         ]);
         setStats(statsResponse.data);
-        setRecentReviews(reviewsResponse.data ?? []);
+        setRecentReviews(reviewsResponse.data?.data ?? reviewsResponse.data ?? []);
       } catch (error) {
         console.error('Failed to fetch dashboard data:', error);
       } finally {
@@ -39,8 +39,8 @@ const Dashboard = () => {
     fetchDashboardData();
   }, []);
 
-  const weeklyTrend = stats.lastWeekFeedback > 0 
-    ? ((stats.thisWeekFeedback - stats.lastWeekFeedback) / stats.lastWeekFeedback * 100).toFixed(1)
+  const weeklyTrend = (stats.lastWeekFeedback || 0) > 0 
+    ? (((stats.thisWeekFeedback || 0) - (stats.lastWeekFeedback || 0)) / (stats.lastWeekFeedback || 1) * 100).toFixed(1)
     : '0.0';
   const isTrendPositive = parseFloat(weeklyTrend) >= 0;
 
@@ -60,7 +60,7 @@ const Dashboard = () => {
             <div>
               <p className="text-neutral-slate text-sm font-medium">Total Feedback</p>
               <p className="text-3xl font-bold text-primary-dark mt-1">
-                {stats.totalFeedback.toLocaleString()}
+                {(stats.totalFeedback || 0).toLocaleString()}
               </p>
             </div>
             <div className="w-12 h-12 bg-primary-dark/10 rounded-full flex items-center justify-center">
@@ -79,7 +79,7 @@ const Dashboard = () => {
             <div>
               <p className="text-neutral-slate text-sm font-medium">Pending Reviews</p>
               <p className="text-3xl font-bold text-primary-orange mt-1">
-                {stats.pendingReviews}
+                {stats.pendingReviews || 0}
               </p>
             </div>
             <div className="w-12 h-12 bg-primary-orange/10 rounded-full flex items-center justify-center">
@@ -97,7 +97,7 @@ const Dashboard = () => {
             <div>
               <p className="text-neutral-slate text-sm font-medium">Approved Reviews</p>
               <p className="text-3xl font-bold text-green-600 mt-1">
-                {stats.approvedReviews.toLocaleString()}
+                {(stats.approvedReviews || 0).toLocaleString()}
               </p>
             </div>
             <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
@@ -115,7 +115,7 @@ const Dashboard = () => {
             <div>
               <p className="text-neutral-slate text-sm font-medium">Average Rating</p>
               <p className="text-3xl font-bold text-primary-dark mt-1">
-                {stats.avgRating}
+                {(stats.avgRating || 0).toFixed(1)}
               </p>
             </div>
             <div className="w-12 h-12 bg-primary-orange/10 rounded-full flex items-center justify-center">
@@ -123,7 +123,7 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="mt-3">
-            <StarRating rating={Math.round(stats.avgRating)} readonly size="sm" />
+            <StarRating rating={Math.round(stats.avgRating || 0)} readonly size="sm" />
           </div>
         </div>
       </div>
