@@ -155,14 +155,31 @@ class FeedbackController extends Controller
     }
 
     /**
-     * Update feedback status (approve / pending).
+     * Update feedback status (approve / pending / hidden).
      */
     public function updateStatus(UpdateFeedbackStatusRequest $request, int $id)
     {
         try {
             $validated = $request->validated();
             $feedback = Feedback::findOrFail($id);
-            $feedback->is_approved = ($validated['status'] === 'approved');
+            
+            // Set is_approved and is_hidden based on status
+            switch ($validated['status']) {
+                case 'approved':
+                    $feedback->is_approved = true;
+                    $feedback->is_hidden = false;
+                    break;
+                case 'hidden':
+                    $feedback->is_approved = false;
+                    $feedback->is_hidden = true;
+                    break;
+                case 'pending':
+                default:
+                    $feedback->is_approved = false;
+                    $feedback->is_hidden = false;
+                    break;
+            }
+            
             $feedback->save();
 
             // Invalidate stats cache

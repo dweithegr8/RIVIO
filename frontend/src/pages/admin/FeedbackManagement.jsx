@@ -53,12 +53,23 @@ const FeedbackManagement = () => {
 
   const handleHide = async (id) => {
     try {
+      await feedbackAPI.updateStatus(id, 'hidden');
+      setFeedbackList((prev) =>
+        prev.map((f) => (f.id === id ? { ...f, status: 'hidden', is_approved: false } : f))
+      );
+    } catch (error) {
+      console.error('Failed to hide:', error);
+    }
+  };
+
+  const handleShow = async (id) => {
+    try {
       await feedbackAPI.updateStatus(id, 'pending');
       setFeedbackList((prev) =>
         prev.map((f) => (f.id === id ? { ...f, status: 'pending', is_approved: false } : f))
       );
     } catch (error) {
-      console.error('Failed to hide:', error);
+      console.error('Failed to show:', error);
     }
   };
 
@@ -228,7 +239,7 @@ const FeedbackManagement = () => {
                         )}
                         {feedback.status === 'hidden' && (
                           <button
-                            onClick={() => handleApprove(feedback.id)}
+                            onClick={() => handleShow(feedback.id)}
                             className="p-2 text-primary-dark hover:bg-neutral-lightGray rounded-lg transition-colors"
                             title="Show"
                           >
