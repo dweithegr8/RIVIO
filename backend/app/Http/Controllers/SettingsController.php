@@ -22,7 +22,6 @@ class SettingsController extends Controller
             'showRatingsBreakdown' => true,
             'allowAnonymousReviews' => true,
             'minimumRatingToShow' => 1,
-            'notification_email' => config('mail.from.address', ''),
         ];
     }
 
