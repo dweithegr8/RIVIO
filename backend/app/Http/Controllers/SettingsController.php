@@ -31,21 +31,21 @@ class SettingsController extends Controller
     public static function getMerged(): array
     {
         try {
+            // ...existing code...
             $row = Setting::where('key', self::SETTINGS_KEY)->first();
             $value = $row ? json_decode($row->value, true) : null;
             $defaults = self::defaults();
             return is_array($value) ? array_merge($defaults, $value) : $defaults;
         } catch (\Exception $e) {
+            // ...existing code...
             return self::defaults();
         }
     }
 
-    /**
-     * GET /api/settings/public - Return only settings needed for public/reviews/submission (no auth).
-     */
     public function public(): \Illuminate\Http\JsonResponse
     {
         try {
+            // ...existing code...
             $all = self::getMerged();
             $keys = [
                 'enablePublicReviews',
@@ -60,17 +60,16 @@ class SettingsController extends Controller
             }
             return response()->json($public, 200);
         } catch (\Exception $e) {
+            // ...existing code...
             return response()->json([
                 'message' => 'An error occurred while retrieving public settings.',
             ], 500);
         }
     }
 
-    /**
-     * GET /api/settings - Return current settings (for admin Settings page).
-     */
     public function index()
     {
+        // ...existing code...
         try {
             $settings = self::getMerged();
             return response()->json($settings, 200);
@@ -81,11 +80,9 @@ class SettingsController extends Controller
         }
     }
 
-    /**
-     * PUT /api/settings - Update settings (from admin Settings page).
-     */
     public function update(UpdateSettingsRequest $request)
     {
+        // ...existing code...
         try {
             $validated = $request->validated();
 

@@ -84,6 +84,7 @@ class FeedbackController extends Controller
         try {
             $settings = SettingsController::getMerged();
             $allowAnonymous = $settings['allowAnonymousReviews'] ?? true;
+            $requireApproval = (bool)($settings['requireApproval'] ?? true);
             $validated = $request->validated();
 
             $message = $validated['message'] ?? $validated['comment'] ?? $request->input('comment', '');
@@ -116,6 +117,9 @@ class FeedbackController extends Controller
                 'email' => $request->input('email') ?? '',
                 'message' => $message,
                 'rating' => (int) ($validated['rating'] ?? $request->input('rating', 0)),
+                'status' => !empty($settings['requireApproval']) ? 'pending' : 'approved',
+                'is_approved' => $requireApproval ? false : true,
+                'is_hidden' => false,
             ]);
 
             // Invalidate stats cache
