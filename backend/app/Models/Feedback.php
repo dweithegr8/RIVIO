@@ -17,6 +17,7 @@ class Feedback extends Model
         'message',
         'rating',
         'is_approved',
+        'is_hidden',
     ];
 
     /**

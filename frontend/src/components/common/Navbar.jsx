@@ -48,12 +48,6 @@ const Navbar = () => {
           <div className="hidden md:flex items-center space-x-4">
             <Link
               to="/admin/login"
-              className="text-primary-dark font-medium hover:text-primary-orange transition-colors duration-200"
-            >
-              Sign up
-            </Link>
-            <Link
-              to="/admin/login"
               className="bg-primary-dark text-white px-5 py-2 rounded-lg font-medium hover:opacity-90 transition-opacity duration-200"
             >
               Login
@@ -92,13 +86,6 @@ const Navbar = () => {
                 </Link>
               ))}
               <div className="flex flex-col space-y-2 pt-3 border-t border-neutral-lightGray">
-                <Link
-                  to="/admin/login"
-                  className="text-primary-dark font-medium px-2 py-2"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Sign up
-                </Link>
                 <Link
                   to="/admin/login"
                   className="bg-primary-dark text-white px-5 py-2 rounded-lg font-medium text-center"

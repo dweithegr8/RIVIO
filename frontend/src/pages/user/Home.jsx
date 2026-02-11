@@ -86,29 +86,6 @@ const Home = () => {
                 </p>
               </div>
 
-              {/* Search Bar */}
-              <form onSubmit={handleSearch} className="relative max-w-lg">
-                <div className="flex shadow-card rounded-lg overflow-hidden">
-                  <div className="relative flex-grow">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-slate" />
-                    <input
-                      type="text"
-                      placeholder="Search reviews or businesses..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-12 pr-4 py-4 border-0 focus:outline-none focus:ring-0 text-primary-dark placeholder-neutral-slate"
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    className="bg-primary-dark text-white px-6 py-4 font-semibold hover:opacity-90 transition-opacity duration-200 flex items-center gap-2"
-                  >
-                    <span className="hidden sm:inline">Search</span>
-                    <Search className="w-5 h-5 sm:hidden" />
-                  </button>
-                </div>
-              </form>
-
               {/* Quick Stats */}
               <div className="flex flex-wrap gap-6">
                 <div className="flex items-center gap-2">
