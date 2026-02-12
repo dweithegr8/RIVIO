@@ -11,7 +11,8 @@ class UpdateFeedbackStatusRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->check(); // Admin only
+        // Allow only authenticated users
+        return $this->user() !== null;
     }
 
     /**

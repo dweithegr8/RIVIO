@@ -162,22 +162,7 @@ const Settings = () => {
             label="Email Notifications"
             description="Receive email alerts when new feedback is submitted."
           />
-          <div className="flex flex-col gap-2 p-4 bg-neutral-offWhite rounded-lg">
-            <label htmlFor="notification_email" className="block text-sm font-medium text-primary-dark">
-              Notification email address
-            </label>
-            <input
-              id="notification_email"
-              type="email"
-              placeholder="admin@example.com"
-              value={settings.notification_email ?? ''}
-              onChange={(e) => handleChange('notification_email', e.target.value)}
-              className="input-field"
-            />
-            <p className="text-sm text-neutral-slate">
-              Emails are sent here when new feedback is submitted (only if Email Notifications is on).
-            </p>
-          </div>
+          
         </div>
       </div>
 

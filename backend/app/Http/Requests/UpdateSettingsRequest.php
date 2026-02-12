@@ -11,7 +11,7 @@ class UpdateSettingsRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->check(); // Admin only
+        return $this->user() !== null; // Admin only
     }
 
     /**
@@ -26,7 +26,6 @@ class UpdateSettingsRequest extends FormRequest
             'showRatingsBreakdown' => ['boolean'],
             'allowAnonymousReviews' => ['boolean'],
             'minimumRatingToShow' => ['integer', 'min:1', 'max:5'],
-            'notification_email' => ['nullable', 'email', 'max:255'],
         ];
     }
 

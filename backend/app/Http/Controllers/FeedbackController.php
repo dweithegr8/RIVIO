@@ -28,7 +28,7 @@ class FeedbackController extends Controller
         $page = (int) ($request->query('page') ?? 1);
 
         $column = $sort === 'rating' ? 'rating' : 'created_at';
-        
+
         // Paginate instead of just limit
         $paginated = Feedback::orderBy($column, $order)
             ->paginate($limit, ['*'], 'page', $page);
@@ -57,7 +57,7 @@ class FeedbackController extends Controller
         $page = (int) ($request->query('page') ?? 1);
 
         $column = $sort === 'rating' ? 'rating' : 'created_at';
-        
+
         // Paginate approved feedback
         $paginated = Feedback::where('is_approved', true)
             ->orderBy($column, $order)
@@ -84,6 +84,7 @@ class FeedbackController extends Controller
         try {
             $settings = SettingsController::getMerged();
             $allowAnonymous = $settings['allowAnonymousReviews'] ?? true;
+            $requireApproval = (bool)($settings['requireApproval'] ?? true);
             $validated = $request->validated();
 
             $message = $validated['message'] ?? $validated['comment'] ?? $request->input('comment', '');
@@ -116,29 +117,32 @@ class FeedbackController extends Controller
                 'email' => $request->input('email') ?? '',
                 'message' => $message,
                 'rating' => (int) ($validated['rating'] ?? $request->input('rating', 0)),
+                'status' => !empty($settings['requireApproval']) ? 'pending' : 'approved',
+                'is_approved' => $requireApproval ? false : true,
+                'is_hidden' => false,
             ]);
 
             // Invalidate stats cache
             FeedbackCacheService::invalidate();
 
-            // Send email notification asynchronously if enabled (admin)
+            // Send email notification immediately if enabled (admin)
             if (!empty($settings['enableEmailNotifications'])) {
                 $to = $settings['notification_email'] ?? config('mail.from.address');
                 if ($to) {
-                    SendFeedbackNotificationEmail::dispatch($feedback, $to);
+                    Mail::to($to)->send(new NewFeedbackNotification($feedback));
                 }
             }
 
-            // Queue a confirmation email to the submitter if they provided an email
+            // Send a confirmation email to the submitter if they provided an email
             if (!empty($feedback->email)) {
                 try {
-                    Mail::to($feedback->email)->queue(new FeedbackConfirmation($feedback));
-                    \Illuminate\Support\Facades\Log::info('Feedback confirmation queued', [
+                    Mail::to($feedback->email)->send(new FeedbackConfirmation($feedback));
+                    \Illuminate\Support\Facades\Log::info('Feedback confirmation sent', [
                         'feedback_id' => $feedback->id,
                         'recipient' => $feedback->email,
                     ]);
                 } catch (\Exception $e) {
-                    \Illuminate\Support\Facades\Log::error('Failed to queue feedback confirmation', [
+                    \Illuminate\Support\Facades\Log::error('Failed to send feedback confirmation', [
                         'feedback_id' => $feedback->id,
                         'recipient' => $feedback->email,
                         'error' => $e->getMessage(),
@@ -162,7 +166,7 @@ class FeedbackController extends Controller
         try {
             $validated = $request->validated();
             $feedback = Feedback::findOrFail($id);
-            
+
             // Set is_approved and is_hidden based on status
             switch ($validated['status']) {
                 case 'approved':
@@ -179,7 +183,7 @@ class FeedbackController extends Controller
                     $feedback->is_hidden = false;
                     break;
             }
-            
+
             $feedback->save();
 
             // Invalidate stats cache
