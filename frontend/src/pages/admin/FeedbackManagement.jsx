@@ -1,32 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Check, X, Trash2, Eye, EyeOff, Search, Filter, Loader2, MessageSquare } from 'lucide-react';
 import StarRating from '../../components/common/StarRating';
 import { feedbackAPI } from '../../services/api';
+import { useLiveFeedback } from '../../contexts/LiveFeedbackContext';
 
 const FeedbackManagement = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
-  const [isLoading, setIsLoading] = useState(true);
 
-  // Real data state - starts empty, populated by API
-  const [feedbackList, setFeedbackList] = useState([]);
-
-  const fetchFeedback = async () => {
-    setIsLoading(true);
-    try {
-      const response = await feedbackAPI.getAll();
-      setFeedbackList(response.data?.data ?? response.data ?? []);
-    } catch (error) {
-      console.error('Failed to fetch feedback:', error);
-      setFeedbackList([]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchFeedback();
-  }, []);
+  const { feedbackList, setFeedbackList, newFeedbackIds, isLoading } = useLiveFeedback();
 
   // Filter feedback based on search and status
   const filteredFeedback = feedbackList.filter((feedback) => {
@@ -121,11 +103,10 @@ const FeedbackManagement = () => {
               <button
                 key={status}
                 onClick={() => setFilterStatus(status)}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                  filterStatus === status
-                    ? 'bg-brand-dark text-white'
-                    : 'bg-neutral-25 text-neutral-500 hover:bg-neutral-100'
-                }`}
+                className={`px-4 py-2 rounded-lg font-medium transition-colors ${filterStatus === status
+                  ? 'bg-brand-dark text-white'
+                  : 'bg-neutral-25 text-neutral-500 hover:bg-neutral-100'
+                  }`}
               >
                 {status.charAt(0).toUpperCase() + status.slice(1)}
                 <span className="ml-2 text-sm opacity-75">({statusCounts[status]})</span>
@@ -181,16 +162,33 @@ const FeedbackManagement = () => {
                   </tr>
                 ) : (
                   filteredFeedback.map((feedback) => (
-                    <tr key={feedback.id} className="hover:bg-neutral-25/50 transition-colors">
+                    <tr
+                      key={feedback.id}
+                      className={`transition-all duration-700 ${newFeedbackIds.has(feedback.id)
+                          ? 'bg-green-50 animate-highlight-fade'
+                          : 'hover:bg-neutral-25/50'
+                        }`}
+                    >
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-brand-primary/20 rounded-full flex items-center justify-center flex-shrink-0">
-                            <span className="text-brand-primary font-semibold">
+                          <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${newFeedbackIds.has(feedback.id)
+                              ? 'bg-green-200 ring-2 ring-green-400'
+                              : 'bg-brand-primary/20'
+                            }`}>
+                            <span className={`font-semibold ${newFeedbackIds.has(feedback.id) ? 'text-green-700' : 'text-brand-primary'
+                              }`}>
                               {feedback.name ? feedback.name.charAt(0) : 'A'}
                             </span>
                           </div>
                           <div>
-                            <p className="font-medium text-brand-dark">{feedback.name || 'Anonymous'}</p>
+                            <div className="flex items-center gap-2">
+                              <p className="font-medium text-brand-dark">{feedback.name || 'Anonymous'}</p>
+                              {newFeedbackIds.has(feedback.id) && (
+                                <span className="px-1.5 py-0.5 text-[10px] font-bold rounded bg-green-500 text-white animate-pulse">
+                                  NEW
+                                </span>
+                              )}
+                            </div>
                             <p className="text-sm text-neutral-500">
                               {feedback.email || 'No email provided'}
                             </p>
@@ -209,55 +207,55 @@ const FeedbackManagement = () => {
                         <span className="text-sm text-neutral-500">
                           {feedback.created_at || feedback.date
                             ? new Date(feedback.created_at || feedback.date).toLocaleDateString('en-US', {
-                                month: 'short',
-                                day: 'numeric',
-                                year: 'numeric',
-                              })
+                              month: 'short',
+                              day: 'numeric',
+                              year: 'numeric',
+                            })
                             : 'N/A'}
                         </span>
                       </td>
                       <td className="px-6 py-4">{getStatusBadge(feedback.status)}</td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center justify-end gap-2">
-                        {feedback.status !== 'approved' && (
+                      <td className="px-6 py-4">
+                        <div className="flex items-center justify-end gap-2">
+                          {feedback.status !== 'approved' && (
+                            <button
+                              onClick={() => handleApprove(feedback.id)}
+                              className="p-2 text-green-600 hover:bg-green-100 rounded-lg transition-colors"
+                              title="Approve"
+                            >
+                              <Check className="w-5 h-5" />
+                            </button>
+                          )}
+                          {feedback.status !== 'hidden' && (
+                            <button
+                              onClick={() => handleHide(feedback.id)}
+                              className="p-2 text-neutral-500 hover:bg-neutral-100 rounded-lg transition-colors"
+                              title="Hide"
+                            >
+                              <EyeOff className="w-5 h-5" />
+                            </button>
+                          )}
+                          {feedback.status === 'hidden' && (
+                            <button
+                              onClick={() => handleShow(feedback.id)}
+                              className="p-2 text-brand-dark hover:bg-neutral-100 rounded-lg transition-colors"
+                              title="Show"
+                            >
+                              <Eye className="w-5 h-5" />
+                            </button>
+                          )}
                           <button
-                            onClick={() => handleApprove(feedback.id)}
-                            className="p-2 text-green-600 hover:bg-green-100 rounded-lg transition-colors"
-                            title="Approve"
+                            onClick={() => handleDelete(feedback.id)}
+                            className="p-2 text-red-600 hover:bg-red-100 rounded-lg transition-colors"
+                            title="Delete"
                           >
-                            <Check className="w-5 h-5" />
+                            <Trash2 className="w-5 h-5" />
                           </button>
-                        )}
-                        {feedback.status !== 'hidden' && (
-                          <button
-                            onClick={() => handleHide(feedback.id)}
-                            className="p-2 text-neutral-500 hover:bg-neutral-100 rounded-lg transition-colors"
-                            title="Hide"
-                          >
-                            <EyeOff className="w-5 h-5" />
-                          </button>
-                        )}
-                        {feedback.status === 'hidden' && (
-                          <button
-                            onClick={() => handleShow(feedback.id)}
-                            className="p-2 text-brand-dark hover:bg-neutral-100 rounded-lg transition-colors"
-                            title="Show"
-                          >
-                            <Eye className="w-5 h-5" />
-                          </button>
-                        )}
-                        <button
-                          onClick={() => handleDelete(feedback.id)}
-                          className="p-2 text-red-600 hover:bg-red-100 rounded-lg transition-colors"
-                          title="Delete"
-                        >
-                          <Trash2 className="w-5 h-5" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>

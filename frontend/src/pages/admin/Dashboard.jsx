@@ -1,45 +1,16 @@
-import { useState, useEffect } from 'react';
 import { Star, MessageSquare, Clock, CheckCircle, TrendingUp, TrendingDown, Loader2 } from 'lucide-react';
 import StarRating from '../../components/common/StarRating';
-import { feedbackAPI } from '../../services/api';
+import { useLiveFeedback } from '../../contexts/LiveFeedbackContext';
 
 const Dashboard = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  
-  // Real data state - starts empty, populated by API
-  const [stats, setStats] = useState({
-    totalFeedback: 0,
-    pendingReviews: 0,
-    approvedReviews: 0,
-    avgRating: 0,
-    thisWeekFeedback: 0,
-    lastWeekFeedback: 0,
-  });
+  const { stats, feedbackList, newFeedbackIds, isLoading } = useLiveFeedback();
 
-  const [recentReviews, setRecentReviews] = useState([]);
+  // Get recent 5 reviews
+  const recentReviews = [...feedbackList]
+    .sort((a, b) => new Date(b.created_at || b.date) - new Date(a.created_at || a.date))
+    .slice(0, 5);
 
-  // Fetch dashboard data on component mount
-  useEffect(() => {
-    const fetchDashboardData = async () => {
-      setIsLoading(true);
-      try {
-        const [statsResponse, reviewsResponse] = await Promise.all([
-          feedbackAPI.getStats(),
-          feedbackAPI.getAll({ limit: 5, sort: 'date', order: 'desc' }),
-        ]);
-        setStats(statsResponse.data);
-        setRecentReviews(reviewsResponse.data?.data ?? reviewsResponse.data ?? []);
-      } catch (error) {
-        console.error('Failed to fetch dashboard data:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchDashboardData();
-  }, []);
-
-  const weeklyTrend = (stats.lastWeekFeedback || 0) > 0 
+  const weeklyTrend = (stats.lastWeekFeedback || 0) > 0
     ? (((stats.thisWeekFeedback || 0) - (stats.lastWeekFeedback || 0)) / (stats.lastWeekFeedback || 1) * 100).toFixed(1)
     : '0.0';
   const isTrendPositive = parseFloat(weeklyTrend) >= 0;
@@ -154,7 +125,10 @@ const Dashboard = () => {
             {recentReviews.map((review) => (
               <div
                 key={review.id}
-                className="flex items-start gap-4 p-4 bg-neutral-25 rounded-lg"
+                className={`flex items-start gap-4 p-4 rounded-lg transition-all duration-700 ${newFeedbackIds.has(review.id)
+                    ? 'bg-green-50 ring-2 ring-green-400/50 animate-highlight-fade'
+                    : 'bg-neutral-25'
+                  }`}
               >
                 <div className="w-10 h-10 bg-brand-primary/20 rounded-full flex items-center justify-center flex-shrink-0">
                   <span className="text-brand-primary font-semibold">
@@ -164,12 +138,16 @@ const Dashboard = () => {
                 <div className="flex-grow min-w-0">
                   <div className="flex items-center gap-3 mb-1">
                     <h4 className="font-medium text-brand-dark">{review.name || 'Anonymous'}</h4>
+                    {newFeedbackIds.has(review.id) && (
+                      <span className="px-2 py-0.5 text-xs font-bold rounded-full bg-green-500 text-white animate-pulse">
+                        NEW
+                      </span>
+                    )}
                     <span
-                      className={`px-2 py-0.5 text-xs font-medium rounded-full ${
-                        review.status === 'pending'
-                          ? 'bg-yellow-100 text-yellow-800'
-                          : 'bg-green-100 text-green-800'
-                      }`}
+                      className={`px-2 py-0.5 text-xs font-medium rounded-full ${review.status === 'pending'
+                        ? 'bg-yellow-100 text-yellow-800'
+                        : 'bg-green-100 text-green-800'
+                        }`}
                     >
                       {review.status}
                     </span>

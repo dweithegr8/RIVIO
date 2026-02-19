@@ -1,18 +1,17 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Bell, User, X, LogOut, Settings, ChevronDown, Menu } from 'lucide-react';
+import { Bell, User, X, LogOut, Settings, ChevronDown, Menu, MessageSquare } from 'lucide-react';
 import { authAPI } from '../../services/api';
+import { useLiveFeedback } from '../../contexts/LiveFeedbackContext';
 
 const AdminHeader = ({ onMenuToggle }) => {
   const navigate = useNavigate();
+  const { notifications, dismissNotification, clearAllNotifications, lastUpdated } = useLiveFeedback();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const notificationRef = useRef(null);
   const profileRef = useRef(null);
-
-  // Mock notifications - will be populated by API
-  const [notifications, setNotifications] = useState([]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -37,20 +36,11 @@ const AdminHeader = ({ onMenuToggle }) => {
       navigate('/admin/login');
     } catch (error) {
       console.error('Logout failed:', error);
-      // Still remove token and redirect even if API call fails
       localStorage.removeItem('auth_token');
       navigate('/admin/login');
     } finally {
       setIsLoggingOut(false);
     }
-  };
-
-  const clearNotification = (id) => {
-    setNotifications((prev) => prev.filter((n) => n.id !== id));
-  };
-
-  const clearAllNotifications = () => {
-    setNotifications([]);
   };
 
   return (
@@ -72,15 +62,29 @@ const AdminHeader = ({ onMenuToggle }) => {
 
         {/* Right Side Actions */}
         <div className="flex items-center gap-4">
+          {/* Live Indicator */}
+          <div className="hidden sm:flex items-center gap-2 text-xs text-neutral-400 mr-2">
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+            </span>
+            <span>Live</span>
+            {lastUpdated && (
+              <span>· {lastUpdated.toLocaleTimeString()}</span>
+            )}
+          </div>
+
           {/* Notifications */}
           <div className="relative" ref={notificationRef}>
-            <button 
+            <button
               onClick={() => setShowNotifications(!showNotifications)}
               className="relative p-2 text-neutral-500 hover:text-brand-dark hover:bg-neutral-25 rounded-lg transition-colors"
             >
               <Bell className="w-5 h-5" />
               {notifications.length > 0 && (
-                <span className="absolute top-1 right-1 w-2 h-2 bg-brand-primary rounded-full"></span>
+                <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-brand-primary rounded-full flex items-center justify-center text-[10px] font-bold text-white px-1 animate-bounce" style={{ animationDuration: '1s', animationIterationCount: 3 }}>
+                  {notifications.length}
+                </span>
               )}
             </button>
 
@@ -108,14 +112,24 @@ const AdminHeader = ({ onMenuToggle }) => {
                     notifications.map((notification) => (
                       <div
                         key={notification.id}
-                        className="flex items-start gap-3 p-4 hover:bg-neutral-25 border-b border-neutral-100 last:border-b-0"
+                        className="flex items-start gap-3 p-4 hover:bg-neutral-25 border-b border-neutral-100 last:border-b-0 cursor-pointer transition-colors"
+                        onClick={() => {
+                          setShowNotifications(false);
+                          navigate('/admin/feedback');
+                        }}
                       >
+                        <div className="w-8 h-8 bg-brand-primary/15 rounded-full flex items-center justify-center flex-shrink-0">
+                          <MessageSquare className="w-4 h-4 text-brand-primary" />
+                        </div>
                         <div className="flex-grow">
                           <p className="text-sm text-brand-dark">{notification.message}</p>
                           <p className="text-xs text-neutral-500 mt-1">{notification.time}</p>
                         </div>
                         <button
-                          onClick={() => clearNotification(notification.id)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            dismissNotification(notification.id);
+                          }}
                           className="p-1 text-neutral-500 hover:text-red-500 transition-colors"
                         >
                           <X className="w-4 h-4" />
