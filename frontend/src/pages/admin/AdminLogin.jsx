@@ -78,22 +78,22 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-offWhite flex items-center justify-center px-4">
+    <div className="min-h-screen bg-neutral-25 flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center space-x-2">
-            <div className="w-12 h-12 bg-primary-orange rounded-lg flex items-center justify-center">
+            <div className="w-12 h-12 bg-brand-primary rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-2xl">R</span>
             </div>
-            <span className="text-primary-dark font-bold text-2xl">RepuFeed</span>
+            <span className="text-brand-dark font-bold text-2xl">Repufeed</span>
           </div>
-          <p className="text-neutral-slate mt-2">Admin Portal</p>
+          <p className="text-neutral-500 mt-2">Admin Portal</p>
         </div>
 
         {/* Login Form */}
         <div className="card">
-          <h2 className="text-2xl font-bold text-primary-dark text-center mb-6">
+          <h2 className="text-2xl font-bold text-brand-dark text-center mb-6">
             Welcome Back
           </h2>
 
@@ -107,7 +107,7 @@ const AdminLogin = () => {
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Email */}
             <div className="space-y-2">
-              <label htmlFor="email" className="block text-sm font-semibold text-primary-dark">
+              <label htmlFor="email" className="block text-sm font-semibold text-brand-dark">
                 Email
               </label>
               <input
@@ -129,7 +129,7 @@ const AdminLogin = () => {
 
             {/* Password */}
             <div className="space-y-2">
-              <label htmlFor="password" className="block text-sm font-semibold text-primary-dark">
+              <label htmlFor="password" className="block text-sm font-semibold text-brand-dark">
                 Password
               </label>
               <div className="relative">
@@ -145,7 +145,7 @@ const AdminLogin = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-slate hover:text-primary-dark transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-brand-dark transition-colors"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -163,11 +163,11 @@ const AdminLogin = () => {
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
-                  className="w-4 h-4 rounded border-neutral-lightGray text-primary-dark focus:ring-primary-dark"
+                  className="w-4 h-4 rounded border-neutral-100 text-brand-dark focus:ring-brand-dark"
                 />
-                <span className="text-sm text-neutral-slate">Remember me</span>
+                <span className="text-sm text-neutral-500">Remember me</span>
               </label>
-              <a href="#" className="text-sm text-primary-orange hover:text-primary-dark transition-colors">
+              <a href="#" className="text-sm text-brand-primary hover:text-brand-dark transition-colors">
                 Forgot password?
               </a>
             </div>
@@ -176,7 +176,7 @@ const AdminLogin = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-primary-dark text-white py-3 rounded-lg font-semibold hover:opacity-90 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full bg-brand-dark text-white py-3 rounded-lg font-semibold hover:opacity-90 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {isLoading ? (
                 <>
@@ -190,16 +190,16 @@ const AdminLogin = () => {
           </form>
 
           {/* Demo Credentials */}
-          <div className="mt-6 p-4 bg-neutral-offWhite rounded-lg">
-            <p className="text-xs text-neutral-slate text-center">
+          <div className="mt-6 p-4 bg-neutral-25 rounded-lg">
+            <p className="text-xs text-neutral-500 text-center">
               Demo credentials: <span className="font-mono">admin@example.com</span> / <span className="font-mono">password123</span>
             </p>
           </div>
         </div>
 
         {/* Back to Home */}
-        <p className="text-center mt-6 text-neutral-slate text-sm">
-          <a href="/" className="text-primary-orange hover:text-primary-dark transition-colors">
+        <p className="text-center mt-6 text-neutral-500 text-sm">
+          <a href="/" className="text-brand-primary hover:text-brand-dark transition-colors">
             ← Back to Home
           </a>
         </p>

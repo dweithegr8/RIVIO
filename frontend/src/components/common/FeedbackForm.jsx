@@ -152,7 +152,7 @@ const FeedbackForm = ({ onSubmit, allowAnonymousReviews = true }) => {
 
         {/* Star Rating Input */}
         <div className="space-y-2">
-          <label className="block text-sm font-semibold text-primary-dark">
+          <label className="block text-sm font-semibold text-brand-dark">
             Your Rating <span className="text-red-500">*</span>
           </label>
           <StarRating
@@ -170,7 +170,7 @@ const FeedbackForm = ({ onSubmit, allowAnonymousReviews = true }) => {
 
         {/* Comment Text Area */}
         <div className="space-y-2">
-          <label htmlFor="comment" className="block text-sm font-semibold text-primary-dark">
+          <label htmlFor="comment" className="block text-sm font-semibold text-brand-dark">
             Your Feedback <span className="text-red-500">*</span>
           </label>
           <textarea
@@ -190,9 +190,9 @@ const FeedbackForm = ({ onSubmit, allowAnonymousReviews = true }) => {
                 {errors.comment}
               </p>
             ) : (
-              <span className="text-neutral-slate text-sm">Minimum 10 characters</span>
+              <span className="text-neutral-500 text-sm">Minimum 10 characters</span>
             )}
-            <span className={`text-sm ${formData.comment.length > 1000 ? 'text-red-500' : 'text-neutral-slate'}`}>
+            <span className={`text-sm ${formData.comment.length > 1000 ? 'text-red-500' : 'text-neutral-500'}`}>
               {formData.comment.length}/1000
             </span>
           </div>
@@ -200,14 +200,14 @@ const FeedbackForm = ({ onSubmit, allowAnonymousReviews = true }) => {
 
         {/* Name & Email Fields */}
         <div className="space-y-4">
-          <p className="text-sm text-neutral-slate">
+          <p className="text-sm text-neutral-500">
             {requireNameEmail ? 'Your name and email are required.' : 'Optional: Add your details to personalize your review'}
           </p>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Name Input */}
             <div className="space-y-2">
-              <label htmlFor="name" className="block text-sm font-semibold text-primary-dark">
+              <label htmlFor="name" className="block text-sm font-semibold text-brand-dark">
                 Your Name {requireNameEmail && <span className="text-red-500">*</span>}
               </label>
               <input
@@ -228,7 +228,7 @@ const FeedbackForm = ({ onSubmit, allowAnonymousReviews = true }) => {
 
             {/* Email Input */}
             <div className="space-y-2">
-              <label htmlFor="email" className="block text-sm font-semibold text-primary-dark">
+              <label htmlFor="email" className="block text-sm font-semibold text-brand-dark">
                 Your Email {requireNameEmail && <span className="text-red-500">*</span>}
               </label>
               <input
@@ -254,7 +254,7 @@ const FeedbackForm = ({ onSubmit, allowAnonymousReviews = true }) => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="flex-1 bg-primary-dark text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="flex-1 bg-brand-dark text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {isSubmitting ? (
               <>
@@ -269,7 +269,7 @@ const FeedbackForm = ({ onSubmit, allowAnonymousReviews = true }) => {
             type="button"
             onClick={handleReset}
             disabled={isSubmitting}
-            className="px-6 py-3 border-2 border-neutral-lightGray text-neutral-slate rounded-lg font-semibold hover:border-primary-dark hover:text-primary-dark transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-3 border-2 border-neutral-100 text-neutral-500 rounded-lg font-semibold hover:border-brand-dark hover:text-brand-dark transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Reset
           </button>

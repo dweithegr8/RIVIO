@@ -48,8 +48,8 @@ const Dashboard = () => {
     <div className="space-y-6">
       {/* Page Header */}
       <div>
-        <h1 className="text-2xl font-bold text-primary-dark">Dashboard</h1>
-        <p className="text-neutral-slate">Welcome back! Here's an overview of your feedback system.</p>
+        <h1 className="text-2xl font-bold text-brand-dark">Dashboard</h1>
+        <p className="text-neutral-500">Welcome back! Here's an overview of your feedback system.</p>
       </div>
 
       {/* Stats Cards */}
@@ -58,13 +58,13 @@ const Dashboard = () => {
         <div className="card">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-neutral-slate text-sm font-medium">Total Feedback</p>
-              <p className="text-3xl font-bold text-primary-dark mt-1">
+              <p className="text-neutral-500 text-sm font-medium">Total Feedback</p>
+              <p className="text-3xl font-bold text-brand-dark mt-1">
                 {(stats.totalFeedback || 0).toLocaleString()}
               </p>
             </div>
-            <div className="w-12 h-12 bg-primary-dark/10 rounded-full flex items-center justify-center">
-              <MessageSquare className="w-6 h-6 text-primary-dark" />
+            <div className="w-12 h-12 bg-brand-dark/10 rounded-full flex items-center justify-center">
+              <MessageSquare className="w-6 h-6 text-brand-dark" />
             </div>
           </div>
           <div className={`flex items-center gap-1 mt-3 text-sm ${isTrendPositive ? 'text-green-600' : 'text-red-600'}`}>
@@ -77,16 +77,16 @@ const Dashboard = () => {
         <div className="card">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-neutral-slate text-sm font-medium">Pending Reviews</p>
-              <p className="text-3xl font-bold text-primary-orange mt-1">
+              <p className="text-neutral-500 text-sm font-medium">Pending Reviews</p>
+              <p className="text-3xl font-bold text-brand-primary mt-1">
                 {stats.pendingReviews || 0}
               </p>
             </div>
-            <div className="w-12 h-12 bg-primary-orange/10 rounded-full flex items-center justify-center">
-              <Clock className="w-6 h-6 text-primary-orange" />
+            <div className="w-12 h-12 bg-brand-primary/10 rounded-full flex items-center justify-center">
+              <Clock className="w-6 h-6 text-brand-primary" />
             </div>
           </div>
-          <p className="text-sm text-neutral-slate mt-3">
+          <p className="text-sm text-neutral-500 mt-3">
             Awaiting moderation
           </p>
         </div>
@@ -95,7 +95,7 @@ const Dashboard = () => {
         <div className="card">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-neutral-slate text-sm font-medium">Approved Reviews</p>
+              <p className="text-neutral-500 text-sm font-medium">Approved Reviews</p>
               <p className="text-3xl font-bold text-green-600 mt-1">
                 {(stats.approvedReviews || 0).toLocaleString()}
               </p>
@@ -104,7 +104,7 @@ const Dashboard = () => {
               <CheckCircle className="w-6 h-6 text-green-600" />
             </div>
           </div>
-          <p className="text-sm text-neutral-slate mt-3">
+          <p className="text-sm text-neutral-500 mt-3">
             Published publicly
           </p>
         </div>
@@ -113,13 +113,13 @@ const Dashboard = () => {
         <div className="card">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-neutral-slate text-sm font-medium">Average Rating</p>
-              <p className="text-3xl font-bold text-primary-dark mt-1">
+              <p className="text-neutral-500 text-sm font-medium">Average Rating</p>
+              <p className="text-3xl font-bold text-brand-dark mt-1">
                 {(stats.avgRating || 0).toFixed(1)}
               </p>
             </div>
-            <div className="w-12 h-12 bg-primary-orange/10 rounded-full flex items-center justify-center">
-              <Star className="w-6 h-6 text-primary-orange fill-primary-orange" />
+            <div className="w-12 h-12 bg-brand-primary/10 rounded-full flex items-center justify-center">
+              <Star className="w-6 h-6 text-brand-primary fill-brand-primary" />
             </div>
           </div>
           <div className="mt-3">
@@ -131,10 +131,10 @@ const Dashboard = () => {
       {/* Recent Reviews */}
       <div className="card">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-semibold text-primary-dark">Recent Reviews</h2>
+          <h2 className="text-lg font-semibold text-brand-dark">Recent Reviews</h2>
           <a
             href="/admin/feedback"
-            className="text-sm text-primary-orange hover:text-primary-dark transition-colors"
+            className="text-sm text-brand-primary hover:text-brand-dark transition-colors"
           >
             View all →
           </a>
@@ -142,28 +142,28 @@ const Dashboard = () => {
 
         {isLoading ? (
           <div className="flex items-center justify-center py-8">
-            <Loader2 className="w-6 h-6 animate-spin text-primary-orange" />
+            <Loader2 className="w-6 h-6 animate-spin text-brand-primary" />
           </div>
         ) : recentReviews.length === 0 ? (
           <div className="text-center py-8">
-            <MessageSquare className="w-12 h-12 text-neutral-lightGray mx-auto mb-3" />
-            <p className="text-neutral-slate">No feedback received yet.</p>
+            <MessageSquare className="w-12 h-12 text-neutral-100 mx-auto mb-3" />
+            <p className="text-neutral-500">No feedback received yet.</p>
           </div>
         ) : (
           <div className="space-y-4">
             {recentReviews.map((review) => (
               <div
                 key={review.id}
-                className="flex items-start gap-4 p-4 bg-neutral-offWhite rounded-lg"
+                className="flex items-start gap-4 p-4 bg-neutral-25 rounded-lg"
               >
-                <div className="w-10 h-10 bg-primary-orange/20 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span className="text-primary-orange font-semibold">
+                <div className="w-10 h-10 bg-brand-primary/20 rounded-full flex items-center justify-center flex-shrink-0">
+                  <span className="text-brand-primary font-semibold">
                     {review.name ? review.name.charAt(0) : 'A'}
                   </span>
                 </div>
                 <div className="flex-grow min-w-0">
                   <div className="flex items-center gap-3 mb-1">
-                    <h4 className="font-medium text-primary-dark">{review.name || 'Anonymous'}</h4>
+                    <h4 className="font-medium text-brand-dark">{review.name || 'Anonymous'}</h4>
                     <span
                       className={`px-2 py-0.5 text-xs font-medium rounded-full ${
                         review.status === 'pending'
@@ -175,9 +175,9 @@ const Dashboard = () => {
                     </span>
                   </div>
                   <StarRating rating={review.rating} readonly size="sm" />
-                  <p className="text-neutral-slate text-sm mt-2 truncate">{review.comment || review.message}</p>
+                  <p className="text-neutral-500 text-sm mt-2 truncate">{review.comment || review.message}</p>
                 </div>
-                <span className="text-xs text-neutral-slate flex-shrink-0">
+                <span className="text-xs text-neutral-500 flex-shrink-0">
                   {new Date(review.date || review.created_at).toLocaleDateString()}
                 </span>
               </div>

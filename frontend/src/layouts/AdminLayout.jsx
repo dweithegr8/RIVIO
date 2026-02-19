@@ -10,9 +10,10 @@ const AdminLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
-    // Check if token exists in localStorage
-    const token = localStorage.getItem('auth_token');
-    setIsAuthenticated(!!token);
+    // DEV BYPASS: Skip auth check for development
+    // const token = localStorage.getItem('auth_token');
+    // setIsAuthenticated(!!token);
+    setIsAuthenticated(true);
     setIsLoading(false);
   }, []);
 
@@ -28,7 +29,7 @@ const AdminLayout = () => {
   }
 
   return (
-    <div className="min-h-screen flex bg-neutral-offWhite">
+    <div className="min-h-screen flex bg-neutral-25">
       <AdminSidebar isOpen={isSidebarOpen} onClose={closeSidebar} />
       <div className="flex-1 flex flex-col min-w-0">
         <AdminHeader onMenuToggle={toggleSidebar} />

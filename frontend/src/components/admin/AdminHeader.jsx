@@ -54,19 +54,19 @@ const AdminHeader = ({ onMenuToggle }) => {
   };
 
   return (
-    <header className="bg-white border-b border-neutral-lightGray px-4 md:px-6 py-4">
+    <header className="bg-white border-b border-neutral-100 px-4 md:px-6 py-4">
       <div className="flex items-center justify-between">
         {/* Mobile Menu Button & Page Title */}
         <div className="flex items-center gap-3">
           <button
             onClick={onMenuToggle}
-            className="md:hidden p-2 rounded-lg hover:bg-neutral-offWhite transition-colors"
+            className="md:hidden p-2 rounded-lg hover:bg-neutral-25 transition-colors"
           >
-            <Menu className="w-6 h-6 text-primary-dark" />
+            <Menu className="w-6 h-6 text-brand-dark" />
           </button>
           <div>
-            <p className="text-sm text-neutral-slate">Welcome back,</p>
-            <h2 className="text-lg font-semibold text-primary-dark">Administrator</h2>
+            <p className="text-sm text-neutral-500">Welcome back,</p>
+            <h2 className="text-lg font-semibold text-brand-dark">Administrator</h2>
           </div>
         </div>
 
@@ -76,23 +76,23 @@ const AdminHeader = ({ onMenuToggle }) => {
           <div className="relative" ref={notificationRef}>
             <button 
               onClick={() => setShowNotifications(!showNotifications)}
-              className="relative p-2 text-neutral-slate hover:text-primary-dark hover:bg-neutral-offWhite rounded-lg transition-colors"
+              className="relative p-2 text-neutral-500 hover:text-brand-dark hover:bg-neutral-25 rounded-lg transition-colors"
             >
               <Bell className="w-5 h-5" />
               {notifications.length > 0 && (
-                <span className="absolute top-1 right-1 w-2 h-2 bg-primary-orange rounded-full"></span>
+                <span className="absolute top-1 right-1 w-2 h-2 bg-brand-primary rounded-full"></span>
               )}
             </button>
 
             {/* Notification Dropdown */}
             {showNotifications && (
-              <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-neutral-lightGray z-50">
-                <div className="flex items-center justify-between p-4 border-b border-neutral-lightGray">
-                  <h3 className="font-semibold text-primary-dark">Notifications</h3>
+              <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-neutral-100 z-50">
+                <div className="flex items-center justify-between p-4 border-b border-neutral-100">
+                  <h3 className="font-semibold text-brand-dark">Notifications</h3>
                   {notifications.length > 0 && (
                     <button
                       onClick={clearAllNotifications}
-                      className="text-xs text-primary-orange hover:text-primary-dark transition-colors"
+                      className="text-xs text-brand-primary hover:text-brand-dark transition-colors"
                     >
                       Clear all
                     </button>
@@ -101,22 +101,22 @@ const AdminHeader = ({ onMenuToggle }) => {
                 <div className="max-h-64 overflow-y-auto">
                   {notifications.length === 0 ? (
                     <div className="p-6 text-center">
-                      <Bell className="w-8 h-8 text-neutral-lightGray mx-auto mb-2" />
-                      <p className="text-neutral-slate text-sm">No notifications</p>
+                      <Bell className="w-8 h-8 text-neutral-100 mx-auto mb-2" />
+                      <p className="text-neutral-500 text-sm">No notifications</p>
                     </div>
                   ) : (
                     notifications.map((notification) => (
                       <div
                         key={notification.id}
-                        className="flex items-start gap-3 p-4 hover:bg-neutral-offWhite border-b border-neutral-lightGray last:border-b-0"
+                        className="flex items-start gap-3 p-4 hover:bg-neutral-25 border-b border-neutral-100 last:border-b-0"
                       >
                         <div className="flex-grow">
-                          <p className="text-sm text-primary-dark">{notification.message}</p>
-                          <p className="text-xs text-neutral-slate mt-1">{notification.time}</p>
+                          <p className="text-sm text-brand-dark">{notification.message}</p>
+                          <p className="text-xs text-neutral-500 mt-1">{notification.time}</p>
                         </div>
                         <button
                           onClick={() => clearNotification(notification.id)}
-                          className="p-1 text-neutral-slate hover:text-red-500 transition-colors"
+                          className="p-1 text-neutral-500 hover:text-red-500 transition-colors"
                         >
                           <X className="w-4 h-4" />
                         </button>
@@ -132,24 +132,24 @@ const AdminHeader = ({ onMenuToggle }) => {
           <div className="relative" ref={profileRef}>
             <button
               onClick={() => setShowProfileMenu(!showProfileMenu)}
-              className="flex items-center gap-3 pl-4 border-l border-neutral-lightGray hover:bg-neutral-offWhite rounded-lg p-2 transition-colors"
+              className="flex items-center gap-3 pl-4 border-l border-neutral-100 hover:bg-neutral-25 rounded-lg p-2 transition-colors"
             >
-              <div className="w-10 h-10 bg-primary-dark rounded-full flex items-center justify-center">
+              <div className="w-10 h-10 bg-brand-dark rounded-full flex items-center justify-center">
                 <User className="w-5 h-5 text-white" />
               </div>
               <div className="hidden sm:block text-left">
-                <p className="text-sm font-medium text-primary-dark">Admin User</p>
-                <p className="text-xs text-neutral-slate">admin@repufeed.com</p>
+                <p className="text-sm font-medium text-brand-dark">Admin User</p>
+                <p className="text-xs text-neutral-500">admin@Repufeed.com</p>
               </div>
-              <ChevronDown className={`w-4 h-4 text-neutral-slate transition-transform ${showProfileMenu ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`w-4 h-4 text-neutral-500 transition-transform ${showProfileMenu ? 'rotate-180' : ''}`} />
             </button>
 
             {/* Profile Dropdown */}
             {showProfileMenu && (
-              <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-neutral-lightGray z-50">
-                <div className="p-4 border-b border-neutral-lightGray">
-                  <p className="font-semibold text-primary-dark">Admin User</p>
-                  <p className="text-sm text-neutral-slate">admin@repufeed.com</p>
+              <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-neutral-100 z-50">
+                <div className="p-4 border-b border-neutral-100">
+                  <p className="font-semibold text-brand-dark">Admin User</p>
+                  <p className="text-sm text-neutral-500">admin@Repufeed.com</p>
                 </div>
                 <div className="p-2">
                   <button
@@ -157,7 +157,7 @@ const AdminHeader = ({ onMenuToggle }) => {
                       setShowProfileMenu(false);
                       navigate('/admin/settings');
                     }}
-                    className="w-full flex items-center gap-3 px-3 py-2 text-sm text-neutral-slate hover:text-primary-dark hover:bg-neutral-offWhite rounded-lg transition-colors"
+                    className="w-full flex items-center gap-3 px-3 py-2 text-sm text-neutral-500 hover:text-brand-dark hover:bg-neutral-25 rounded-lg transition-colors"
                   >
                     <Settings className="w-4 h-4" />
                     Settings

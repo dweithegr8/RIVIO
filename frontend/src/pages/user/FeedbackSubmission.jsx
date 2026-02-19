@@ -29,17 +29,17 @@ const FeedbackSubmission = () => {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-offWhite py-12">
+    <div className="min-h-screen bg-neutral-25 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-orange/10 rounded-full mb-6">
-            <MessageSquarePlus className="w-8 h-8 text-primary-orange" />
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-brand-primary/10 rounded-full mb-6">
+            <MessageSquarePlus className="w-8 h-8 text-brand-primary" />
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold text-primary-dark mb-4">
+          <h1 className="text-3xl md:text-4xl font-bold text-brand-dark mb-4">
             Share Your Feedback
           </h1>
-          <p className="text-neutral-slate text-lg max-w-2xl mx-auto">
+          <p className="text-neutral-500 text-lg max-w-2xl mx-auto">
             We value your opinion! Your feedback helps us improve and helps others 
             make informed decisions. All reviews are moderated before being published.
           </p>
@@ -50,23 +50,23 @@ const FeedbackSubmission = () => {
 
         {/* Info Section */}
         <div className="mt-12 max-w-2xl mx-auto">
-          <div className="bg-white rounded-xl p-6 border border-neutral-lightGray">
-            <h3 className="font-semibold text-primary-dark mb-3">Review Guidelines</h3>
-            <ul className="space-y-2 text-neutral-slate text-sm">
+          <div className="bg-white rounded-xl p-6 border border-neutral-100">
+            <h3 className="font-semibold text-brand-dark mb-3">Review Guidelines</h3>
+            <ul className="space-y-2 text-neutral-500 text-sm">
               <li className="flex items-start gap-2">
-                <span className="text-primary-orange font-bold">•</span>
+                <span className="text-brand-primary font-bold">•</span>
                 Be honest and constructive in your feedback
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-primary-orange font-bold">•</span>
+                <span className="text-brand-primary font-bold">•</span>
                 Focus on your actual experience
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-primary-orange font-bold">•</span>
+                <span className="text-brand-primary font-bold">•</span>
                 Avoid using offensive or inappropriate language
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-primary-orange font-bold">•</span>
+                <span className="text-brand-primary font-bold">•</span>
                 Reviews are moderated and may take up to 24 hours to appear
               </li>
             </ul>

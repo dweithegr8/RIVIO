@@ -18,14 +18,14 @@ class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex items-center justify-center bg-neutral-offWhite p-4">
+        <div className="min-h-screen flex items-center justify-center bg-neutral-25 p-4">
           <div className="max-w-md w-full">
             <div className="bg-white rounded-lg shadow-lg p-8 text-center">
               <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-              <h1 className="text-2xl font-bold text-primary-dark mb-2">
+              <h1 className="text-2xl font-bold text-brand-dark mb-2">
                 Something Went Wrong
               </h1>
-              <p className="text-neutral-slate mb-6">
+              <p className="text-neutral-500 mb-6">
                 An unexpected error occurred. Please try refreshing the page.
               </p>
               <p className="text-sm text-red-500 mb-6 text-left bg-red-50 p-4 rounded overflow-auto max-h-24">
@@ -33,7 +33,7 @@ class ErrorBoundary extends React.Component {
               </p>
               <button
                 onClick={() => window.location.reload()}
-                className="bg-primary-dark text-white px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition-opacity"
+                className="bg-brand-dark text-white px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition-opacity"
               >
                 Refresh Page
               </button>

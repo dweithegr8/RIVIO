@@ -51,26 +51,26 @@ const AdminSidebar = ({ isOpen, onClose }) => {
         />
       )}
       
-      <aside className={`fixed md:static inset-y-0 left-0 z-50 w-64 bg-white border-r border-neutral-lightGray min-h-screen flex flex-col transform transition-transform duration-300 ease-in-out ${
+      <aside className={`fixed md:static inset-y-0 left-0 z-50 w-64 bg-white border-r border-neutral-100 min-h-screen flex flex-col transform transition-transform duration-300 ease-in-out ${
         isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
       }`}>
         {/* Logo */}
-        <div className="p-6 border-b border-neutral-lightGray flex items-center justify-between">
+        <div className="p-6 border-b border-neutral-100 flex items-center justify-between">
           <a href="/admin/dashboard" className="flex items-center space-x-2">
-          <div className="w-10 h-10 bg-primary-orange rounded-lg flex items-center justify-center">
+          <div className="w-10 h-10 bg-brand-primary rounded-lg flex items-center justify-center">
             <span className="text-white font-bold text-xl">R</span>
           </div>
           <div>
-            <span className="text-primary-dark font-bold text-lg block">RepuFeed</span>
-            <span className="text-neutral-slate text-xs">Admin Portal</span>
+            <span className="text-brand-dark font-bold text-lg block">Repufeed</span>
+            <span className="text-neutral-500 text-xs">Admin Portal</span>
           </div>
         </a>
         {/* Mobile Close Button */}
         <button
           onClick={onClose}
-          className="md:hidden p-2 rounded-lg hover:bg-neutral-offWhite transition-colors"
+          className="md:hidden p-2 rounded-lg hover:bg-neutral-25 transition-colors"
         >
-          <X className="w-5 h-5 text-neutral-slate" />
+          <X className="w-5 h-5 text-neutral-500" />
         </button>
       </div>
 
@@ -85,8 +85,8 @@ const AdminSidebar = ({ isOpen, onClose }) => {
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${
                     isActive
-                      ? 'bg-primary-dark text-white'
-                      : 'text-neutral-slate hover:bg-neutral-offWhite hover:text-primary-dark'
+                      ? 'bg-brand-dark text-white'
+                      : 'text-neutral-500 hover:bg-neutral-25 hover:text-brand-dark'
                   }`
                 }
               >
@@ -99,11 +99,11 @@ const AdminSidebar = ({ isOpen, onClose }) => {
       </nav>
 
       {/* Logout Button */}
-      <div className="p-4 border-t border-neutral-lightGray">
+      <div className="p-4 border-t border-neutral-100">
         <button
           onClick={handleLogout}
           disabled={isLoggingOut}
-          className="flex items-center justify-center gap-3 px-4 py-3 rounded-lg font-medium text-neutral-slate hover:bg-red-50 hover:text-red-600 transition-colors w-full disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center justify-center gap-3 px-4 py-3 rounded-lg font-medium text-neutral-500 hover:bg-red-50 hover:text-red-600 transition-colors w-full disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoggingOut ? (
             <>

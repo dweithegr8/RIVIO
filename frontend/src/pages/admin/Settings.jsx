@@ -57,15 +57,15 @@ const Settings = () => {
   };
 
   const ToggleSwitch = ({ enabled, onChange, label, description }) => (
-    <div className="flex items-center justify-between p-4 bg-neutral-offWhite rounded-lg">
+    <div className="flex items-center justify-between p-4 bg-neutral-25 rounded-lg">
       <div>
-        <h4 className="font-medium text-primary-dark">{label}</h4>
-        <p className="text-sm text-neutral-slate">{description}</p>
+        <h4 className="font-medium text-brand-dark">{label}</h4>
+        <p className="text-sm text-neutral-500">{description}</p>
       </div>
       <button
         onClick={onChange}
         className={`relative w-14 h-7 rounded-full transition-colors duration-200 ${
-          enabled ? 'bg-primary-orange' : 'bg-neutral-lightGray'
+          enabled ? 'bg-brand-primary' : 'bg-neutral-100'
         }`}
       >
         <span
@@ -81,8 +81,8 @@ const Settings = () => {
     <div className="space-y-6 max-w-3xl">
       {/* Page Header */}
       <div>
-        <h1 className="text-2xl font-bold text-primary-dark">Settings</h1>
-        <p className="text-neutral-slate">Configure your feedback system preferences.</p>
+        <h1 className="text-2xl font-bold text-brand-dark">Settings</h1>
+        <p className="text-neutral-500">Configure your feedback system preferences.</p>
       </div>
 
       {/* Success Message */}
@@ -95,7 +95,7 @@ const Settings = () => {
 
       {/* Public Reviews Settings */}
       <div className="card">
-        <h3 className="text-lg font-semibold text-primary-dark mb-6">Public Reviews</h3>
+        <h3 className="text-lg font-semibold text-brand-dark mb-6">Public Reviews</h3>
         <div className="space-y-4">
           <ToggleSwitch
             enabled={settings.enablePublicReviews}
@@ -120,7 +120,7 @@ const Settings = () => {
 
       {/* Submission Settings */}
       <div className="card">
-        <h3 className="text-lg font-semibold text-primary-dark mb-6">Submission Settings</h3>
+        <h3 className="text-lg font-semibold text-brand-dark mb-6">Submission Settings</h3>
         <div className="space-y-4">
           <ToggleSwitch
             enabled={settings.allowAnonymousReviews}
@@ -130,17 +130,17 @@ const Settings = () => {
           />
           
           {/* Minimum Rating Dropdown */}
-          <div className="flex items-center justify-between p-4 bg-neutral-offWhite rounded-lg">
+          <div className="flex items-center justify-between p-4 bg-neutral-25 rounded-lg">
             <div>
-              <h4 className="font-medium text-primary-dark">Minimum Rating to Display</h4>
-              <p className="text-sm text-neutral-slate">
+              <h4 className="font-medium text-brand-dark">Minimum Rating to Display</h4>
+              <p className="text-sm text-neutral-500">
                 Only show reviews with this rating or higher.
               </p>
             </div>
             <select
               value={settings.minimumRatingToShow}
               onChange={(e) => handleChange('minimumRatingToShow', parseInt(e.target.value))}
-              className="px-4 py-2 border border-neutral-lightGray rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-dark bg-white"
+              className="px-4 py-2 border border-neutral-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-dark bg-white"
             >
               <option value={1}>1 Star & Above</option>
               <option value={2}>2 Stars & Above</option>
@@ -154,7 +154,7 @@ const Settings = () => {
 
       {/* Notification Settings */}
       <div className="card">
-        <h3 className="text-lg font-semibold text-primary-dark mb-6">Notifications</h3>
+        <h3 className="text-lg font-semibold text-brand-dark mb-6">Notifications</h3>
         <div className="space-y-4">
           <ToggleSwitch
             enabled={settings.enableEmailNotifications}
@@ -171,7 +171,7 @@ const Settings = () => {
         <button
           onClick={handleSave}
           disabled={isSaving}
-          className="bg-primary-dark text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          className="bg-brand-dark text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
         >
           {isSaving ? (
             <>

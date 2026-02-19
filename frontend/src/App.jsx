@@ -8,6 +8,8 @@ import Home from './pages/user/Home';
 import HowItWorks from './pages/user/HowItWorks';
 import FeedbackSubmission from './pages/user/FeedbackSubmission';
 import PublicReviews from './pages/user/PublicReviews';
+import PrivacyPolicy from './pages/user/PrivacyPolicy';
+import TermsOfService from './pages/user/TermsOfService';
 
 // Admin Portal Pages
 import AdminLogin from './pages/admin/AdminLogin';
@@ -30,6 +32,8 @@ function App() {
             <Route path="how-it-works" element={<HowItWorks />} />
             <Route path="submit-feedback" element={<FeedbackSubmission />} />
             <Route path="reviews" element={<PublicReviews />} />
+            <Route path="privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="terms-of-service" element={<TermsOfService />} />
           </Route>
 
           {/* Admin Portal Routes */}

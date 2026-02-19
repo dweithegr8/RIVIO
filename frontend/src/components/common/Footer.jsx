@@ -5,16 +5,16 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-primary-orange text-white">
+    <footer className="bg-brand-dark text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand Section */}
           <div className="col-span-1 md:col-span-2">
             <Link to="/" className="flex items-center space-x-2 mb-4">
-              <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
-                <span className="text-primary-orange font-bold text-xl">R</span>
+              <div className="w-10 h-10 bg-brand-primary rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-xl">R</span>
               </div>
-              <span className="font-bold text-xl">RepuFeed</span>
+              <span className="font-bold text-xl">Repufeed</span>
             </Link>
             <p className="text-white/90 max-w-md">
               Empowering businesses to collect, manage, and showcase customer feedback 
@@ -55,7 +55,7 @@ const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-center space-x-2">
                 <Mail className="w-5 h-5" />
-                <span className="text-white/90">support@repufeed.com</span>
+                <span className="text-white/90">support@Repufeed.com</span>
               </li>
               <li className="flex items-center space-x-2">
                 <Phone className="w-5 h-5" />
@@ -72,15 +72,15 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="border-t border-white/20 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-white/90 text-sm">
-            © {currentYear} RepuFeed. All rights reserved.
+            © {currentYear} Repufeed. All rights reserved.
           </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
-            <a href="#" className="text-white/90 hover:text-white text-sm transition-colors">
+            <Link to="/privacy-policy" className="text-white/90 hover:text-white text-sm transition-colors">
               Privacy Policy
-            </a>
-            <a href="#" className="text-white/90 hover:text-white text-sm transition-colors">
+            </Link>
+            <Link to="/terms-of-service" className="text-white/90 hover:text-white text-sm transition-colors">
               Terms of Service
-            </a>
+            </Link>
           </div>
         </div>
       </div>

@@ -17,21 +17,21 @@ const HowItWorks = () => {
       icon: MessageSquarePlus,
       title: 'Submit Your Feedback',
       description: 'Share your experience by filling out our simple feedback form. Rate your experience from 1-5 stars and add your comments.',
-      color: 'primary-orange',
+      color: 'brand-primary',
     },
     {
       number: '02',
       icon: Shield,
       title: 'Review & Moderation',
       description: 'Our team reviews all submissions to ensure authentic, helpful feedback. This helps maintain quality and trust.',
-      color: 'primary-dark',
+      color: 'brand-dark',
     },
     {
       number: '03',
       icon: Eye,
       title: 'Published Publicly',
       description: 'Once approved, your review becomes visible on our public reviews page, helping others make informed decisions.',
-      color: 'primary-orange',
+      color: 'brand-primary',
     },
   ];
 
@@ -78,14 +78,14 @@ const HowItWorks = () => {
   ];
 
   return (
-    <div className="bg-neutral-offWhite">
+    <div className="bg-neutral-25">
       {/* Hero Section */}
       <section className="bg-white py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-primary-dark mb-6">
-            How RepuFeed Works
+          <h1 className="text-4xl md:text-5xl font-bold text-brand-dark mb-6">
+            How Repufeed Works
           </h1>
-          <p className="text-xl text-neutral-slate max-w-3xl mx-auto">
+          <p className="text-xl text-neutral-500 max-w-3xl mx-auto">
             A simple, transparent process for collecting and sharing authentic customer feedback 
             that helps businesses grow and customers make informed decisions.
           </p>
@@ -96,10 +96,10 @@ const HowItWorks = () => {
       <section className="py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-primary-dark mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-brand-dark mb-4">
               Three Simple Steps
             </h2>
-            <p className="text-neutral-slate text-lg max-w-2xl mx-auto">
+            <p className="text-neutral-500 text-lg max-w-2xl mx-auto">
               From submission to publication, here's how your feedback journey works.
             </p>
           </div>
@@ -109,12 +109,12 @@ const HowItWorks = () => {
               <div key={step.number} className="relative">
                 {/* Connector Line */}
                 {index < steps.length - 1 && (
-                  <div className="hidden md:block absolute top-16 left-1/2 w-full h-0.5 bg-neutral-lightGray" />
+                  <div className="hidden md:block absolute top-16 left-1/2 w-full h-0.5 bg-neutral-100" />
                 )}
                 
                 <div className="card text-center relative z-10">
                   {/* Step Number */}
-                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-neutral-lightGray text-neutral-slate font-bold text-lg mb-6">
+                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-neutral-100 text-neutral-500 font-bold text-lg mb-6">
                     {step.number}
                   </div>
                   
@@ -123,10 +123,10 @@ const HowItWorks = () => {
                     <step.icon className={`w-8 h-8 text-${step.color}`} />
                   </div>
                   
-                  <h3 className="text-xl font-bold text-primary-dark mb-3">
+                  <h3 className="text-xl font-bold text-brand-dark mb-3">
                     {step.title}
                   </h3>
-                  <p className="text-neutral-slate">
+                  <p className="text-neutral-500">
                     {step.description}
                   </p>
                 </div>
@@ -140,10 +140,10 @@ const HowItWorks = () => {
       <section className="bg-white py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-primary-dark mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-brand-dark mb-4">
               Why Share Your Feedback?
             </h2>
-            <p className="text-neutral-slate text-lg max-w-2xl mx-auto">
+            <p className="text-neutral-500 text-lg max-w-2xl mx-auto">
               Your voice matters. Here's how your feedback makes a difference.
             </p>
           </div>
@@ -151,13 +151,13 @@ const HowItWorks = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {benefits.map((benefit) => (
               <div key={benefit.title} className="text-center">
-                <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary-orange/10 mb-4">
-                  <benefit.icon className="w-7 h-7 text-primary-orange" />
+                <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-brand-primary/10 mb-4">
+                  <benefit.icon className="w-7 h-7 text-brand-primary" />
                 </div>
-                <h3 className="text-lg font-semibold text-primary-dark mb-2">
+                <h3 className="text-lg font-semibold text-brand-dark mb-2">
                   {benefit.title}
                 </h3>
-                <p className="text-neutral-slate text-sm">
+                <p className="text-neutral-500 text-sm">
                   {benefit.description}
                 </p>
               </div>
@@ -170,10 +170,10 @@ const HowItWorks = () => {
       <section className="py-16 lg:py-24">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-primary-dark mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-brand-dark mb-4">
               Frequently Asked Questions
             </h2>
-            <p className="text-neutral-slate text-lg">
+            <p className="text-neutral-500 text-lg">
               Got questions? We've got answers.
             </p>
           </div>
@@ -181,10 +181,10 @@ const HowItWorks = () => {
           <div className="space-y-4">
             {faqs.map((faq, index) => (
               <div key={index} className="card">
-                <h3 className="text-lg font-semibold text-primary-dark mb-2">
+                <h3 className="text-lg font-semibold text-brand-dark mb-2">
                   {faq.question}
                 </h3>
-                <p className="text-neutral-slate">
+                <p className="text-neutral-500">
                   {faq.answer}
                 </p>
               </div>
@@ -194,7 +194,7 @@ const HowItWorks = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-primary-dark py-16">
+      <section className="bg-brand-dark py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Ready to Share Your Experience?
@@ -205,14 +205,14 @@ const HowItWorks = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to="/submit-feedback"
-              className="inline-flex items-center justify-center gap-2 bg-primary-orange text-white px-8 py-4 rounded-lg font-semibold hover:opacity-90 transition-opacity duration-200"
+              className="inline-flex items-center justify-center gap-2 bg-brand-primary text-white px-8 py-4 rounded-lg font-semibold hover:opacity-90 transition-opacity duration-200"
             >
               Submit Feedback
               <ArrowRight className="w-5 h-5" />
             </Link>
             <Link
               to="/reviews"
-              className="inline-flex items-center justify-center gap-2 bg-white text-primary-dark px-8 py-4 rounded-lg font-semibold hover:bg-neutral-offWhite transition-colors duration-200"
+              className="inline-flex items-center justify-center gap-2 bg-white text-brand-dark px-8 py-4 rounded-lg font-semibold hover:bg-neutral-25 transition-colors duration-200"
             >
               View Reviews
             </Link>

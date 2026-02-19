@@ -33,8 +33,8 @@ const StarRating = ({ rating, setRating, size = 'md', readonly = false }) => {
           <Star
             className={`${sizeClasses[size]} ${
               (hoverRating || rating) >= value
-                ? 'fill-primary-orange text-primary-orange'
-                : 'fill-neutral-lightGray text-neutral-lightGray'
+                ? 'fill-brand-primary text-brand-primary'
+                : 'fill-neutral-100 text-neutral-100'
             } transition-colors duration-150`}
           />
         </button>

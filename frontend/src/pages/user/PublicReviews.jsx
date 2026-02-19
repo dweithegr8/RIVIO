@@ -109,23 +109,23 @@ const PublicReviews = () => {
   const showRatingsBreakdown = settings.showRatingsBreakdown !== false;
 
   return (
-    <div className="min-h-screen bg-neutral-offWhite py-12">
+    <div className="min-h-screen bg-neutral-25 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-3xl md:text-4xl font-bold text-primary-dark mb-4">
+          <h1 className="text-3xl md:text-4xl font-bold text-brand-dark mb-4">
             Customer Reviews
           </h1>
-          <p className="text-neutral-slate text-lg max-w-2xl mx-auto">
+          <p className="text-neutral-500 text-lg max-w-2xl mx-auto">
             Read what our customers have to say about their experiences
           </p>
         </div>
 
         {!settings.enablePublicReviews ? (
           <div className="card text-center py-16">
-            <MessageSquare className="w-16 h-16 text-neutral-lightGray mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-primary-dark mb-2">Reviews Not Displayed</h3>
-            <p className="text-neutral-slate">Public reviews are currently disabled by the administrator.</p>
+            <MessageSquare className="w-16 h-16 text-neutral-100 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-brand-dark mb-2">Reviews Not Displayed</h3>
+            <p className="text-neutral-500">Public reviews are currently disabled by the administrator.</p>
           </div>
         ) : (
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -134,11 +134,11 @@ const PublicReviews = () => {
           <div className="lg:col-span-1 space-y-6">
             {/* Rating Summary */}
             <div className="card">
-              <h3 className="font-semibold text-primary-dark mb-4">Rating Summary</h3>
+              <h3 className="font-semibold text-brand-dark mb-4">Rating Summary</h3>
               <div className="text-center mb-4">
-                <div className="text-5xl font-bold text-primary-dark">{avgRating}</div>
+                <div className="text-5xl font-bold text-brand-dark">{avgRating}</div>
                 <StarRating rating={Math.round(parseFloat(avgRating))} readonly size="md" />
-                <p className="text-neutral-slate text-sm mt-1">
+                <p className="text-neutral-500 text-sm mt-1">
                   Based on {reviewsAboveMin.length} reviews
                 </p>
               </div>
@@ -151,18 +151,18 @@ const PublicReviews = () => {
                     onClick={() => setFilterRating(filterRating === star ? 0 : star)}
                     className={`w-full flex items-center gap-2 p-2 rounded-lg transition-colors ${
                       filterRating === star
-                        ? 'bg-primary-orange/10'
-                        : 'hover:bg-neutral-lightGray/50'
+                        ? 'bg-brand-primary/10'
+                        : 'hover:bg-neutral-100/50'
                     }`}
                   >
-                    <span className="text-sm text-neutral-slate w-8">{star}★</span>
-                    <div className="flex-grow h-2 bg-neutral-lightGray rounded-full overflow-hidden">
+                    <span className="text-sm text-neutral-500 w-8">{star}★</span>
+                    <div className="flex-grow h-2 bg-neutral-100 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-primary-orange rounded-full transition-all"
+                        className="h-full bg-brand-primary rounded-full transition-all"
                         style={{ width: `${percentage}%` }}
                       />
                     </div>
-                    <span className="text-sm text-neutral-slate w-8">{count}</span>
+                    <span className="text-sm text-neutral-500 w-8">{count}</span>
                   </button>
                 ))}
               </div>
@@ -170,7 +170,7 @@ const PublicReviews = () => {
               {filterRating > 0 && (
                 <button
                   onClick={() => setFilterRating(0)}
-                  className="w-full mt-4 text-sm text-primary-orange hover:text-primary-dark transition-colors"
+                  className="w-full mt-4 text-sm text-brand-primary hover:text-brand-dark transition-colors"
                 >
                   Clear filter
                 </button>
@@ -183,13 +183,13 @@ const PublicReviews = () => {
           <div className={showRatingsBreakdown ? 'lg:col-span-3 space-y-6' : 'lg:col-span-4 space-y-6'}>
             {isLoading ? (
               <div className="card flex items-center justify-center py-16">
-                <Loader2 className="w-8 h-8 animate-spin text-primary-orange" />
+                <Loader2 className="w-8 h-8 animate-spin text-brand-primary" />
               </div>
             ) : reviews.length === 0 ? (
               <div className="card text-center py-16">
-                <MessageSquare className="w-16 h-16 text-neutral-lightGray mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-primary-dark mb-2">No Reviews Yet</h3>
-                <p className="text-neutral-slate">Be the first to share your experience!</p>
+                <MessageSquare className="w-16 h-16 text-neutral-100 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-brand-dark mb-2">No Reviews Yet</h3>
+                <p className="text-neutral-500">Be the first to share your experience!</p>
               </div>
             ) : (
               <>
@@ -198,33 +198,33 @@ const PublicReviews = () => {
               <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
                 {/* Search */}
                 <div className="relative flex-grow max-w-md">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-slate" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-500" />
                   <input
                     type="text"
                     placeholder="Search reviews..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-neutral-lightGray rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-dark focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-2 border border-neutral-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-dark focus:border-transparent"
                   />
                 </div>
 
                 {/* Sort Controls */}
                 <div className="flex items-center gap-2">
-                  <Filter className="w-5 h-5 text-neutral-slate" />
+                  <Filter className="w-5 h-5 text-neutral-500" />
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="px-3 py-2 border border-neutral-lightGray rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-dark bg-white"
+                    className="px-3 py-2 border border-neutral-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-dark bg-white"
                   >
                     <option value="date">Sort by Date</option>
                     <option value="rating">Sort by Rating</option>
                   </select>
                   <button
                     onClick={toggleSortOrder}
-                    className="p-2 border border-neutral-lightGray rounded-lg hover:bg-neutral-lightGray transition-colors"
+                    className="p-2 border border-neutral-100 rounded-lg hover:bg-neutral-100 transition-colors"
                     title={`Order: ${sortOrder === 'desc' ? 'Descending' : 'Ascending'}`}
                   >
-                    <ArrowUpDown className="w-5 h-5 text-neutral-slate" />
+                    <ArrowUpDown className="w-5 h-5 text-neutral-500" />
                   </button>
                 </div>
               </div>
@@ -233,7 +233,7 @@ const PublicReviews = () => {
             {/* Reviews */}
             {filteredReviews.length === 0 ? (
               <div className="card text-center py-12">
-                <p className="text-neutral-slate text-lg">No reviews found matching your criteria.</p>
+                <p className="text-neutral-500 text-lg">No reviews found matching your criteria.</p>
               </div>
             ) : (
               <div className="space-y-4">
@@ -241,17 +241,17 @@ const PublicReviews = () => {
                   <div key={review.id} className="card">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-primary-orange/20 rounded-full flex items-center justify-center">
-                          <span className="text-primary-orange font-semibold text-lg">
+                        <div className="w-12 h-12 bg-brand-primary/20 rounded-full flex items-center justify-center">
+                          <span className="text-brand-primary font-semibold text-lg">
                             {review.name ? review.name.charAt(0) : 'A'}
                           </span>
                         </div>
                         <div>
-                          <h4 className="font-semibold text-primary-dark">{review.name || 'Anonymous'}</h4>
+                          <h4 className="font-semibold text-brand-dark">{review.name || 'Anonymous'}</h4>
                           <StarRating rating={review.rating || 0} readonly size="sm" />
                         </div>
                       </div>
-                      <div className="flex items-center gap-2 text-neutral-slate text-sm">
+                      <div className="flex items-center gap-2 text-neutral-500 text-sm">
                         <Calendar className="w-4 h-4" />
                         {review.created_at || review.date
                           ? new Date(review.created_at || review.date).toLocaleDateString('en-US', {
@@ -262,7 +262,7 @@ const PublicReviews = () => {
                           : 'N/A'}
                       </div>
                     </div>
-                    <p className="text-neutral-darkGray leading-relaxed">
+                    <p className="text-neutral-950 leading-relaxed">
                       "{review.message || review.comment || 'No comment'}"
                     </p>
                   </div>
@@ -272,7 +272,7 @@ const PublicReviews = () => {
 
             {/* Results count */}
             {!isLoading && reviews.length > 0 && (
-              <p className="text-center text-neutral-slate text-sm">
+              <p className="text-center text-neutral-500 text-sm">
                 Showing {filteredReviews.length} of {reviewsAboveMin.length} reviews
                 {minimumRating > 1 && ` (rating ${minimumRating}+ only)`}
               </p>
