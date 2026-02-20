@@ -40,19 +40,19 @@ api.interceptors.response.use(
 export const feedbackAPI = {
   // Get all feedback (admin)
   getAll: (params = {}) => api.get('/feedback', { params }),
-  
+
   // Get approved feedback (public)
   getApproved: (params = {}) => api.get('/feedback/approved', { params }),
-  
+
   // Submit new feedback
   submit: (data) => api.post('/feedback', data),
-  
+
   // Update feedback status (admin)
   updateStatus: (id, status) => api.patch(`/feedback/${id}/status`, { status }),
-  
+
   // Delete feedback (admin)
   delete: (id) => api.delete(`/feedback/${id}`),
-  
+
   // Get feedback statistics
   getStats: () => api.get('/feedback/stats'),
 };
@@ -61,10 +61,10 @@ export const feedbackAPI = {
 export const authAPI = {
   // Admin login
   login: (credentials) => api.post('/admin/login', credentials),
-  
+
   // Admin logout
   logout: () => api.post('/admin/logout'),
-  
+
   // Get current user
   getUser: () => api.get('/admin/user'),
 };
@@ -77,6 +77,14 @@ export const settingsAPI = {
   getPublic: () => api.get('/settings/public'),
   // Update settings
   update: (data) => api.put('/settings', data),
+};
+
+// Payment API endpoints
+export const paymentAPI = {
+  // Check if a card has been used
+  validateCard: (cardNumber) => api.post('/payment/validate-card', { card_number: cardNumber }),
+  // Process subscription
+  subscribe: (data) => api.post('/payment/subscribe', data),
 };
 
 export default api;

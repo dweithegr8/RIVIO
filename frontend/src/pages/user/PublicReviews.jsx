@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { Filter, ArrowUpDown, Calendar, Star, Search, Loader2, MessageSquare, Lock, ShieldCheck, Eye, X, CreditCard, Check, Sparkles } from 'lucide-react';
 import StarRating from '../../components/common/StarRating';
-import { feedbackAPI, settingsAPI } from '../../services/api';
+import { feedbackAPI, settingsAPI, paymentAPI } from '../../services/api';
 
 const POLL_INTERVAL = 5000;
 const FREE_REVIEW_LIMIT = 2;
@@ -31,6 +31,7 @@ const PublicReviews = () => {
   const [selectedPlan, setSelectedPlan] = useState('monthly');
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [cardError, setCardError] = useState('');
   const [paymentForm, setPaymentForm] = useState({
     cardNumber: '',
     expiry: '',
@@ -49,28 +50,101 @@ const PublicReviews = () => {
     return v;
   };
 
+  // Luhn algorithm to validate card number
+  const isValidCardNumber = (number) => {
+    const digits = number.replace(/\D/g, '');
+    if (digits.length < 13 || digits.length > 19) return false;
+    let sum = 0;
+    let isEven = false;
+    for (let i = digits.length - 1; i >= 0; i--) {
+      let digit = parseInt(digits[i], 10);
+      if (isEven) {
+        digit *= 2;
+        if (digit > 9) digit -= 9;
+      }
+      sum += digit;
+      isEven = !isEven;
+    }
+    return sum % 10 === 0;
+  };
+
+  // Check if expiry is valid and in the future
+  const isValidExpiry = (expiry) => {
+    const parts = expiry.split('/');
+    if (parts.length !== 2) return false;
+    const month = parseInt(parts[0], 10);
+    const year = parseInt('20' + parts[1], 10);
+    if (month < 1 || month > 12) return false;
+    const now = new Date();
+    const expiryDate = new Date(year, month);
+    return expiryDate > now;
+  };
+
+
+
   const handlePaymentInput = (field, value) => {
     if (field === 'cardNumber') value = formatCardNumber(value);
     if (field === 'expiry') value = formatExpiry(value);
     if (field === 'cvc') value = value.replace(/\D/g, '').slice(0, 4);
     setPaymentForm((prev) => ({ ...prev, [field]: value }));
+    setCardError(''); // Clear error on input change
   };
 
   const handlePaymentSubmit = async (e) => {
     e.preventDefault();
+    setCardError('');
+
+    // Validate cardholder name
+    if (paymentForm.name.trim().length < 2) {
+      setCardError('Please enter a valid cardholder name.');
+      return;
+    }
+
+    // Validate card number with Luhn
+    if (!isValidCardNumber(paymentForm.cardNumber)) {
+      setCardError('Invalid card number. Please check and try again.');
+      return;
+    }
+
+    // Validate expiry
+    if (!isValidExpiry(paymentForm.expiry)) {
+      setCardError('Invalid or expired card. Please check the expiry date.');
+      return;
+    }
+
+    // Validate CVC
+    if (paymentForm.cvc.length < 3) {
+      setCardError('CVC must be at least 3 digits.');
+      return;
+    }
+
     setIsProcessing(true);
-    // TODO: Integrate real payment gateway
-    setTimeout(() => {
+    try {
+      const response = await paymentAPI.subscribe({
+        card_number: paymentForm.cardNumber,
+        plan: selectedPlan,
+        name: paymentForm.name,
+        expiry: paymentForm.expiry,
+        cvc: paymentForm.cvc,
+      });
+
+      if (response.data.success) {
+        setPaymentSuccess(true);
+        setHasSubscription(true);
+        localStorage.setItem('repufeed_subscribed', 'true');
+      }
+    } catch (error) {
+      const message = error.response?.data?.message || 'Payment failed. Please try again.';
+      setCardError(message);
+    } finally {
       setIsProcessing(false);
-      setPaymentSuccess(true);
-      setHasSubscription(true);
-      localStorage.setItem('repufeed_subscribed', 'true');
-    }, 2000);
+    }
   };
 
   const handleCloseSuccess = () => {
     setShowPaymentModal(false);
     setPaymentSuccess(false);
+    setCardError('');
     setPaymentForm({ cardNumber: '', expiry: '', cvc: '', name: '' });
   };
 
@@ -590,6 +664,14 @@ const PublicReviews = () => {
                         />
                       </div>
                     </div>
+
+                    {/* Validation Error */}
+                    {cardError && (
+                      <div className="flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600">
+                        <X className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                        <span>{cardError}</span>
+                      </div>
+                    )}
 
                     {/* Submit */}
                     <button
