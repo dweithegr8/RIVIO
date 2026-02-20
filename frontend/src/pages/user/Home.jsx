@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Star, MessageSquare, TrendingUp, Users, ArrowRight, Loader2 } from 'lucide-react';
 import StarRating from '../../components/common/StarRating';
+import AdBanner from '../../components/common/AdBanner';
 import { feedbackAPI, settingsAPI } from '../../services/api';
 
 const Home = () => {
@@ -81,7 +82,7 @@ const Home = () => {
                   Customer Feedback & Reputation Management System
                 </h1>
                 <p className="text-lg md:text-xl text-neutral-500 max-w-xl">
-                  Collect, manage, and showcase authentic customer reviews to build trust 
+                  Collect, manage, and showcase authentic customer reviews to build trust
                   and grow your business reputation effortlessly.
                 </p>
               </div>
@@ -122,7 +123,7 @@ const Home = () => {
                 {/* Abstract shapes for illustration */}
                 <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/10 rounded-full blur-3xl"></div>
                 <div className="absolute bottom-0 left-0 w-48 h-48 bg-brand-dark/10 rounded-full blur-3xl"></div>
-                
+
                 {/* Main illustration container */}
                 <div className="relative bg-white rounded-3xl shadow-card-hover p-8 transform rotate-3 hover:rotate-0 transition-transform duration-500">
                   <div className="space-y-6">
@@ -136,7 +137,7 @@ const Home = () => {
                         <div className="h-2 bg-neutral-100/50 rounded-full w-1/2 mt-2"></div>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 bg-brand-dark/20 rounded-full flex items-center justify-center">
                         <MessageSquare className="w-6 h-6 text-brand-dark" />
@@ -146,7 +147,7 @@ const Home = () => {
                         <div className="h-2 bg-neutral-100/50 rounded-full w-2/3 mt-2"></div>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 bg-brand-primary/20 rounded-full flex items-center justify-center">
                         <TrendingUp className="w-6 h-6 text-brand-primary" />
@@ -198,7 +199,7 @@ const Home = () => {
                 </div>
                 <p className="text-neutral-500 font-medium">Average Rating</p>
               </div>
-              
+
               <div className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-2">
                   <MessageSquare className="w-8 h-8 text-brand-dark" />
@@ -206,7 +207,7 @@ const Home = () => {
                 </div>
                 <p className="text-neutral-500 font-medium">Total Reviews</p>
               </div>
-              
+
               <div className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-2">
                   <Users className="w-8 h-8 text-brand-primary" />
@@ -214,7 +215,7 @@ const Home = () => {
                 </div>
                 <p className="text-neutral-500 font-medium">Happy Customers</p>
               </div>
-              
+
               <div className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-2">
                   <TrendingUp className="w-8 h-8 text-brand-dark" />
@@ -226,6 +227,11 @@ const Home = () => {
           )}
         </div>
       </section>
+
+      {/* Ad — Leaderboard */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <AdBanner variant="leaderboard" adIndex={0} />
+      </div>
 
       {/* Recent Reviews Section */}
       <section className="py-16">
@@ -269,32 +275,32 @@ const Home = () => {
                   .filter((review) => review.rating >= (publicSettings.minimumRatingToShow ?? 1))
                   .slice(0, 3)
                   .map((review) => (
-                  <div key={review.id} className="card">
-                    <div className="flex items-center justify-between mb-4">
-                      <StarRating rating={review.rating || 0} readonly size="sm" />
-                      <span className="text-sm text-neutral-500">
-                        {review.created_at 
-                          ? new Date(review.created_at).toLocaleDateString('en-US', {
+                    <div key={review.id} className="card">
+                      <div className="flex items-center justify-between mb-4">
+                        <StarRating rating={review.rating || 0} readonly size="sm" />
+                        <span className="text-sm text-neutral-500">
+                          {review.created_at
+                            ? new Date(review.created_at).toLocaleDateString('en-US', {
                               month: 'short',
                               day: 'numeric',
                               year: 'numeric',
                             })
-                          : 'N/A'}
-                      </span>
-                    </div>
-                    <p className="text-neutral-950 mb-4 line-clamp-3">
-                      "{review.message || review.comment || 'No comment'}"
-                    </p>
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-brand-primary/20 rounded-full flex items-center justify-center">
-                        <span className="text-brand-primary font-semibold">
-                          {review.name ? review.name.charAt(0).toUpperCase() : 'A'}
+                            : 'N/A'}
                         </span>
                       </div>
-                      <span className="font-medium text-brand-dark">{review.name || 'Anonymous'}</span>
+                      <p className="text-neutral-950 mb-4 line-clamp-3">
+                        "{review.message || review.comment || 'No comment'}"
+                      </p>
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-brand-primary/20 rounded-full flex items-center justify-center">
+                          <span className="text-brand-primary font-semibold">
+                            {review.name ? review.name.charAt(0).toUpperCase() : 'A'}
+                          </span>
+                        </div>
+                        <span className="font-medium text-brand-dark">{review.name || 'Anonymous'}</span>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
               </div>
 
               <div className="text-center mt-12">
@@ -310,6 +316,11 @@ const Home = () => {
           )}
         </div>
       </section>
+
+      {/* Ad — Banner */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <AdBanner variant="banner" adIndex={1} />
+      </div>
 
       {/* CTA Section */}
       <section className="bg-brand-dark py-16">

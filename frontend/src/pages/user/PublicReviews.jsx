@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { Filter, ArrowUpDown, Calendar, Star, Search, Loader2, MessageSquare, Lock, ShieldCheck, Eye, X, CreditCard, Check, Sparkles } from 'lucide-react';
 import StarRating from '../../components/common/StarRating';
+import AdBanner from '../../components/common/AdBanner';
 import { feedbackAPI, settingsAPI, paymentAPI } from '../../services/api';
 
 const POLL_INTERVAL = 5000;
@@ -292,6 +293,9 @@ const PublicReviews = () => {
           </p>
         </div>
 
+        {/* Ad — Leaderboard */}
+        <AdBanner variant="leaderboard" adIndex={2} className="mb-8" />
+
         {!settings.enablePublicReviews ? (
           <div className="card text-center py-16">
             <MessageSquare className="w-16 h-16 text-neutral-100 mx-auto mb-4" />
@@ -344,6 +348,9 @@ const PublicReviews = () => {
                     </button>
                   )}
                 </div>
+
+                {/* Sidebar Ad */}
+                <AdBanner variant="sidebar" adIndex={3} />
               </div>
             )}
 
@@ -406,6 +413,11 @@ const PublicReviews = () => {
                       {freeReviews.map((review) => (
                         <ReviewCard key={review.id} review={review} />
                       ))}
+
+                      {/* Inline ad between reviews */}
+                      {freeReviews.length > 0 && (
+                        <AdBanner variant="banner" adIndex={4} />
+                      )}
 
                       {/* Blurred reviews with paywall overlay */}
                       {blurredReviews.length > 0 && (
