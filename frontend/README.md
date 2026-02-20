@@ -1,4 +1,4 @@
-# RepuFeed - Customer Feedback & Reputation Management System
+# Rivio - Customer Feedback & Reputation Management System
 
 A modern React.js frontend for managing customer feedback and reputation.
 
@@ -19,7 +19,7 @@ A modern React.js frontend for managing customer feedback and reputation.
 ## 📁 Project Structure
 
 ```
-repufeed/
+rivio/
 ├── src/
 │   ├── components/
 │   │   ├── admin/
@@ -64,7 +64,7 @@ repufeed/
 
 1. Navigate to the project directory:
    ```bash
-   cd repufeed
+   cd rivio
    ```
 
 2. Install dependencies:

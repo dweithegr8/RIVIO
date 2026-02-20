@@ -1,4 +1,4 @@
-# REPUFEED API Documentation
+# RIVIO API Documentation
 
 ## Base URL
 ```

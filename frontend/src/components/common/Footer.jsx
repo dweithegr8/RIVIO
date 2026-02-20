@@ -11,10 +11,7 @@ const Footer = () => {
           {/* Brand Section */}
           <div className="col-span-1 md:col-span-2">
             <Link to="/" className="flex items-center space-x-2 mb-4">
-              <div className="w-10 h-10 bg-brand-primary rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-xl">R</span>
-              </div>
-              <span className="font-bold text-xl">Repufeed</span>
+              <img src="/Orange%20Var%201.png" alt="Rivio" className="w-10 h-10 object-contain" />
             </Link>
             <p className="text-white/90 max-w-md">
               Empowering businesses to collect, manage, and showcase customer feedback 
@@ -55,7 +52,7 @@ const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-center space-x-2">
                 <Mail className="w-5 h-5" />
-                <span className="text-white/90">support@Repufeed.com</span>
+                <span className="text-white/90">support@Rivio.com</span>
               </li>
               <li className="flex items-center space-x-2">
                 <Phone className="w-5 h-5" />
@@ -72,7 +69,7 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="border-t border-white/20 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-white/90 text-sm">
-            © {currentYear} Repufeed. All rights reserved.
+            © {currentYear} Rivio. All rights reserved.
           </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <Link to="/privacy-policy" className="text-white/90 hover:text-white text-sm transition-colors">

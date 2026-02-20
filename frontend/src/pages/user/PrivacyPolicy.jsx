@@ -24,7 +24,7 @@ const PrivacyPolicy = () => {
             </div>
           </div>
           <p className="text-neutral-500 text-lg">
-            At Repufeed, we are committed to protecting your privacy and ensuring the security of your personal information.
+            At Rivio, we are committed to protecting your privacy and ensuring the security of your personal information.
           </p>
         </div>
 
@@ -34,7 +34,7 @@ const PrivacyPolicy = () => {
           <section>
             <h2 className="text-xl font-bold text-neutral-950 mb-3">1. Information We Collect</h2>
             <p className="text-neutral-500 mb-4">
-              We collect information that you provide directly to us when using the Repufeed platform, including:
+              We collect information that you provide directly to us when using the Rivio platform, including:
             </p>
             <ul className="space-y-2 text-neutral-500">
               <li className="flex items-start gap-2">
@@ -63,7 +63,7 @@ const PrivacyPolicy = () => {
             <ul className="space-y-2 text-neutral-500">
               <li className="flex items-start gap-2">
                 <span className="text-brand-primary font-bold mt-0.5">•</span>
-                Provide, maintain, and improve the Repufeed platform and its features.
+                Provide, maintain, and improve the Rivio platform and its features.
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-brand-primary font-bold mt-0.5">•</span>
@@ -178,7 +178,7 @@ const PrivacyPolicy = () => {
           <section>
             <h2 className="text-xl font-bold text-neutral-950 mb-3">9. Children's Privacy</h2>
             <p className="text-neutral-500">
-              Repufeed is not intended for children under the age of 13. We do not knowingly collect personal information 
+              Rivio is not intended for children under the age of 13. We do not knowingly collect personal information 
               from children. If we become aware that we have collected data from a child under 13, we will take steps to 
               delete it promptly.
             </p>
@@ -201,8 +201,8 @@ const PrivacyPolicy = () => {
               If you have questions or concerns about this Privacy Policy or our data practices, please contact us at:
             </p>
             <div className="mt-3 space-y-1">
-              <p className="text-neutral-800 font-medium">Repufeed Support</p>
-              <p className="text-brand-primary">support@repufeed.com</p>
+              <p className="text-neutral-800 font-medium">Rivio Support</p>
+              <p className="text-brand-primary">support@rivio.com</p>
               <p className="text-neutral-500">123 Business Ave, Suite 100, San Francisco, CA 94102</p>
             </div>
           </section>

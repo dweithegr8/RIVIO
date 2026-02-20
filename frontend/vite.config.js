@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/', // Change this if deploying to a subdirectory (e.g., '/repufeed/')
+  base: '/', // Change this if deploying to a subdirectory (e.g., '/rivio/')
   build: {
     outDir: 'dist',
     assetsDir: 'assets',

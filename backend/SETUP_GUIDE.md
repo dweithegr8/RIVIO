@@ -1,6 +1,6 @@
-# REPUFEED Backend - Setup & Installation Guide
+# RIVIO Backend - Setup & Installation Guide
 
-This is the Laravel backend for the REPUFEED feedback management system. It provides a robust REST API for managing feedback submissions, approvals, and system settings.
+This is the Laravel backend for the RIVIO feedback management system. It provides a robust REST API for managing feedback submissions, approvals, and system settings.
 
 ## 🚀 Quick Start
 
@@ -32,7 +32,7 @@ cp .env.example .env
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=repufeed
+DB_DATABASE=rivio
 DB_USERNAME=root
 DB_PASSWORD=
 ```
@@ -230,8 +230,8 @@ MAIL_HOST=smtp.mailtrap.io
 MAIL_PORT=2525
 MAIL_USERNAME=your_username
 MAIL_PASSWORD=your_password
-MAIL_FROM_ADDRESS=noreply@repufeed.local
-MAIL_FROM_NAME="REPUFEED"
+MAIL_FROM_ADDRESS=noreply@rivio.local
+MAIL_FROM_NAME="RIVIO"
 ```
 
 Or use Laravel's queue system for async email sending (recommended for production).
@@ -275,7 +275,7 @@ php artisan tinker
 ## 📝 Environment Variables
 
 ```
-APP_NAME=REPUFEED
+APP_NAME=RIVIO
 APP_ENV=local
 APP_KEY=base64:...
 APP_DEBUG=true
@@ -284,7 +284,7 @@ APP_URL=http://localhost:8000
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=repufeed
+DB_DATABASE=rivio
 DB_USERNAME=root
 DB_PASSWORD=
 

@@ -21,10 +21,7 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo Placeholder */}
           <Link to="/" className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-brand-primary rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-xl">R</span>
-            </div>
-            <span className="text-white font-bold text-xl tracking-tight">Repufeed</span>
+            <img src="/Orange%20Var%201.png" alt="Rivio" className="w-10 h-10 object-contain" />
           </Link>
 
           {/* Desktop Navigation */}

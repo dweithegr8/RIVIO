@@ -83,7 +83,7 @@ const HowItWorks = () => {
       <section className="bg-white py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-brand-dark mb-6">
-            How Repufeed Works
+            How Rivio Works
           </h1>
           <p className="text-xl text-neutral-500 max-w-3xl mx-auto">
             A simple, transparent process for collecting and sharing authentic customer feedback 

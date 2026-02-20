@@ -20,7 +20,7 @@ class NewFeedbackNotification extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'New Feedback Submitted - RepuFeed',
+            subject: 'New Feedback Submitted - Rivio',
         );
     }
 

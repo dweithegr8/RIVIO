@@ -24,7 +24,7 @@ const TermsOfService = () => {
             </div>
           </div>
           <p className="text-neutral-500 text-lg">
-            Please read these Terms of Service carefully before using the Repufeed platform.
+            Please read these Terms of Service carefully before using the Rivio platform.
           </p>
         </div>
 
@@ -34,7 +34,7 @@ const TermsOfService = () => {
           <section>
             <h2 className="text-xl font-bold text-neutral-950 mb-3">1. Acceptance of Terms</h2>
             <p className="text-neutral-500">
-              By accessing or using the Repufeed platform ("Service"), you agree to be bound by these Terms of Service 
+              By accessing or using the Rivio platform ("Service"), you agree to be bound by these Terms of Service 
               ("Terms"). If you do not agree to these Terms, you may not access or use the Service. These Terms apply 
               to all visitors, users, and others who access or use the Service.
             </p>
@@ -44,7 +44,7 @@ const TermsOfService = () => {
           <section>
             <h2 className="text-xl font-bold text-neutral-950 mb-3">2. Description of Service</h2>
             <p className="text-neutral-500">
-              Repufeed is a customer feedback and reputation management platform that allows businesses to collect, 
+              Rivio is a customer feedback and reputation management platform that allows businesses to collect, 
               manage, moderate, and publicly display customer reviews. The Service includes a user-facing feedback 
               submission system and an administrative dashboard for managing reviews.
             </p>
@@ -53,7 +53,7 @@ const TermsOfService = () => {
           {/* Section 3 */}
           <section>
             <h2 className="text-xl font-bold text-neutral-950 mb-3">3. User Accounts</h2>
-            <p className="text-neutral-500 mb-4">When using Repufeed, you agree to:</p>
+            <p className="text-neutral-500 mb-4">When using Rivio, you agree to:</p>
             <ul className="space-y-2 text-neutral-500">
               <li className="flex items-start gap-2">
                 <span className="text-brand-primary font-bold mt-0.5">•</span>
@@ -78,12 +78,12 @@ const TermsOfService = () => {
           <section>
             <h2 className="text-xl font-bold text-neutral-950 mb-3">4. User-Generated Content</h2>
             <p className="text-neutral-500 mb-4">
-              By submitting feedback, reviews, or any other content ("User Content") to Repufeed, you:
+              By submitting feedback, reviews, or any other content ("User Content") to Rivio, you:
             </p>
             <ul className="space-y-2 text-neutral-500">
               <li className="flex items-start gap-2">
                 <span className="text-brand-primary font-bold mt-0.5">•</span>
-                Grant Repufeed a non-exclusive, worldwide, royalty-free license to use, display, reproduce, and distribute your User Content on the platform.
+                Grant Rivio a non-exclusive, worldwide, royalty-free license to use, display, reproduce, and distribute your User Content on the platform.
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-brand-primary font-bold mt-0.5">•</span>
@@ -132,9 +132,9 @@ const TermsOfService = () => {
           <section>
             <h2 className="text-xl font-bold text-neutral-950 mb-3">6. Moderation & Content Removal</h2>
             <p className="text-neutral-500">
-              Repufeed reserves the right to review, moderate, edit, or remove any User Content at our sole discretion, 
+              Rivio reserves the right to review, moderate, edit, or remove any User Content at our sole discretion, 
               without prior notice. We may remove content that violates these Terms, is deemed inappropriate, or that we 
-              believe may expose Repufeed or its users to harm or legal liability. We are not obligated to monitor all 
+              believe may expose Rivio or its users to harm or legal liability. We are not obligated to monitor all 
               User Content but may do so at our discretion.
             </p>
           </section>
@@ -143,8 +143,8 @@ const TermsOfService = () => {
           <section>
             <h2 className="text-xl font-bold text-neutral-950 mb-3">7. Intellectual Property</h2>
             <p className="text-neutral-500">
-              The Repufeed platform, including its design, logo, branding, software, text, graphics, and other proprietary 
-              content, is owned by Repufeed and protected by intellectual property laws. You may not copy, reproduce, 
+              The Rivio platform, including its design, logo, branding, software, text, graphics, and other proprietary 
+              content, is owned by Rivio and protected by intellectual property laws. You may not copy, reproduce, 
               distribute, modify, or create derivative works from any part of the Service without our express written 
               permission.
             </p>
@@ -155,7 +155,7 @@ const TermsOfService = () => {
             <h2 className="text-xl font-bold text-neutral-950 mb-3">8. Disclaimer of Warranties</h2>
             <p className="text-neutral-500">
               The Service is provided on an "AS IS" and "AS AVAILABLE" basis without warranties of any kind, whether 
-              express or implied. Repufeed does not guarantee that the Service will be uninterrupted, secure, or 
+              express or implied. Rivio does not guarantee that the Service will be uninterrupted, secure, or 
               error-free. We do not warrant the accuracy, completeness, or reliability of any User Content displayed 
               on the platform.
             </p>
@@ -165,7 +165,7 @@ const TermsOfService = () => {
           <section>
             <h2 className="text-xl font-bold text-neutral-950 mb-3">9. Limitation of Liability</h2>
             <p className="text-neutral-500">
-              To the maximum extent permitted by law, Repufeed and its officers, directors, employees, and agents shall 
+              To the maximum extent permitted by law, Rivio and its officers, directors, employees, and agents shall 
               not be liable for any indirect, incidental, special, consequential, or punitive damages, including but not 
               limited to loss of profits, data, reputation, or business opportunities, arising out of or related to your 
               use of the Service.
@@ -176,7 +176,7 @@ const TermsOfService = () => {
           <section>
             <h2 className="text-xl font-bold text-neutral-950 mb-3">10. Indemnification</h2>
             <p className="text-neutral-500">
-              You agree to indemnify, defend, and hold harmless Repufeed and its affiliates from any claims, damages, 
+              You agree to indemnify, defend, and hold harmless Rivio and its affiliates from any claims, damages, 
               losses, liabilities, and expenses (including reasonable attorney fees) arising out of or related to your 
               use of the Service, your User Content, or your violation of these Terms.
             </p>
@@ -188,7 +188,7 @@ const TermsOfService = () => {
             <p className="text-neutral-500">
               We reserve the right to suspend or terminate your access to the Service at any time, with or without cause 
               or notice, for conduct that we believe violates these Terms or is harmful to other users, third parties, or 
-              the business interests of Repufeed. Upon termination, your right to use the Service will immediately cease.
+              the business interests of Rivio. Upon termination, your right to use the Service will immediately cease.
             </p>
           </section>
 
@@ -219,8 +219,8 @@ const TermsOfService = () => {
               If you have any questions about these Terms of Service, please contact us at:
             </p>
             <div className="mt-3 space-y-1">
-              <p className="text-neutral-800 font-medium">Repufeed Legal</p>
-              <p className="text-brand-primary">legal@repufeed.com</p>
+              <p className="text-neutral-800 font-medium">Rivio Legal</p>
+              <p className="text-brand-primary">legal@rivio.com</p>
               <p className="text-neutral-500">123 Business Ave, Suite 100, San Francisco, CA 94102</p>
             </div>
           </section>

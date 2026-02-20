@@ -24,7 +24,7 @@ const PublicReviews = () => {
 
   // Subscription state (persisted in localStorage)
   const [hasSubscription, setHasSubscription] = useState(() => {
-    return localStorage.getItem('repufeed_subscribed') === 'true';
+    return localStorage.getItem('rivio_subscribed') === 'true';
   });
 
   // Payment modal state
@@ -132,7 +132,7 @@ const PublicReviews = () => {
       if (response.data.success) {
         setPaymentSuccess(true);
         setHasSubscription(true);
-        localStorage.setItem('repufeed_subscribed', 'true');
+        localStorage.setItem('rivio_subscribed', 'true');
       }
     } catch (error) {
       const message = error.response?.data?.message || 'Payment failed. Please try again.';
@@ -530,7 +530,7 @@ const PublicReviews = () => {
                   Your subscription is now <span className="font-semibold text-green-600">active</span>!
                 </p>
                 <p className="text-neutral-400 mb-6 text-sm leading-relaxed">
-                  Thank you for subscribing to RepuFeed. You now have full access
+                  Thank you for subscribing to Rivio. You now have full access
                   to all customer reviews, ratings analytics, and premium insights.
                 </p>
 
@@ -573,7 +573,7 @@ const PublicReviews = () => {
                         <Sparkles className="w-5 h-5" />
                       </div>
                       <div>
-                        <h3 className="text-lg font-bold">Subscribe to RepuFeed</h3>
+                        <h3 className="text-lg font-bold">Subscribe to Rivio</h3>
                         <p className="text-sm text-white/60">Unlock all reviews & insights</p>
                       </div>
                     </div>

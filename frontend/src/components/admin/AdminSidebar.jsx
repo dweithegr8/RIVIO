@@ -57,13 +57,8 @@ const AdminSidebar = ({ isOpen, onClose }) => {
         {/* Logo */}
         <div className="p-6 border-b border-neutral-100 flex items-center justify-between">
           <a href="/admin/dashboard" className="flex items-center space-x-2">
-          <div className="w-10 h-10 bg-brand-primary rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-xl">R</span>
-          </div>
-          <div>
-            <span className="text-brand-dark font-bold text-lg block">Repufeed</span>
-            <span className="text-neutral-500 text-xs">Admin Portal</span>
-          </div>
+          <img src="/Orange%20Var%201.png" alt="Rivio" className="w-10 h-10 object-contain" />
+          <span className="text-neutral-500 text-xs">Admin Portal</span>
         </a>
         {/* Mobile Close Button */}
         <button

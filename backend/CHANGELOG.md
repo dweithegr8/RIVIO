@@ -1,4 +1,4 @@
-# REPUFEED Backend - CHANGELOG
+# RIVIO Backend - CHANGELOG
 
 ## Version 2.0 - Complete Backend Enhancement (Feb 9, 2026)
 

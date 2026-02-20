@@ -83,10 +83,7 @@ const AdminLogin = () => {
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center space-x-2">
-            <div className="w-12 h-12 bg-brand-primary rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-2xl">R</span>
-            </div>
-            <span className="text-brand-dark font-bold text-2xl">Repufeed</span>
+            <img src="/Orange%20Var%201.png" alt="Rivio" className="w-12 h-12 object-contain" />
           </div>
           <p className="text-neutral-500 mt-2">Admin Portal</p>
         </div>

@@ -17,6 +17,6 @@
         <tr><td style="padding:8px 0; border-bottom:1px solid #eee;"><strong>Message</strong></td><td style="padding:8px 0; border-bottom:1px solid #eee;">{{ $feedback->message }}</td></tr>
         <tr><td style="padding:8px 0;"><strong>Date</strong></td><td style="padding:8px 0;">{{ $feedback->created_at?->format('Y-m-d H:i') }}</td></tr>
     </table>
-    <p style="color:#706f6c; font-size:14px;">Thanks — RepuFeed Team</p>
+    <p style="color:#706f6c; font-size:14px;">Thanks — Rivio Team</p>
 </body>
 </html>

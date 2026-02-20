@@ -153,7 +153,7 @@ const AdminHeader = ({ onMenuToggle }) => {
               </div>
               <div className="hidden sm:block text-left">
                 <p className="text-sm font-medium text-brand-dark">Admin User</p>
-                <p className="text-xs text-neutral-500">admin@Repufeed.com</p>
+                <p className="text-xs text-neutral-500">admin@Rivio.com</p>
               </div>
               <ChevronDown className={`w-4 h-4 text-neutral-500 transition-transform ${showProfileMenu ? 'rotate-180' : ''}`} />
             </button>
@@ -163,7 +163,7 @@ const AdminHeader = ({ onMenuToggle }) => {
               <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-neutral-100 z-50">
                 <div className="p-4 border-b border-neutral-100">
                   <p className="font-semibold text-brand-dark">Admin User</p>
-                  <p className="text-sm text-neutral-500">admin@Repufeed.com</p>
+                  <p className="text-sm text-neutral-500">admin@Rivio.com</p>
                 </div>
                 <div className="p-2">
                   <button

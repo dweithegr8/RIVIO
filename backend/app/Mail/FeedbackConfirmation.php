@@ -20,7 +20,7 @@ class FeedbackConfirmation extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Thanks for your feedback - RepuFeed',
+            subject: 'Thanks for your feedback - Rivio',
         );
     }
 
