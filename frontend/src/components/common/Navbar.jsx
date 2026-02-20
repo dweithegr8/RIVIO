@@ -52,12 +52,7 @@ const Navbar = () => {
             >
               Login
             </Link>
-            <Link
-              to="/get-started"
-              className="bg-brand-primary text-white px-5 py-2.5 rounded-lg font-semibold shadow-button hover:bg-brand-primary/90 hover:shadow-button-hover transition-all duration-200"
-            >
-              Get Started
-            </Link>
+           
           </div>
 
           {/* Mobile Menu Button */}
