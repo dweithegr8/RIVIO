@@ -112,11 +112,22 @@ jobs:
             php artisan optimize:clear
             php artisan migrate --force
 
-            # Create API symlink in public_html if it doesn't exist
-            SYMLINK_PATH="/home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html/api"
-            TARGET_PATH="/home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/backend-app/public"
+            # Create API symlink in public_html
+            DOMAIN_PATH="/home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}"
+            SYMLINK_PATH="$DOMAIN_PATH/public_html/api"
+            TARGET_PATH="$DOMAIN_PATH/backend-app/public"
             
-            if [ ! -L "$SYMLINK_PATH" ]; then
-                echo "Creating symlink: $SYMLINK_PATH -> $TARGET_PATH"
-                ln -s "$TARGET_PATH" "$SYMLINK_PATH"
+            # Remove whatever is currently at the symlink path (folder or file)
+            rm -rf "$SYMLINK_PATH"
+            
+            echo "Creating symlink: $SYMLINK_PATH -> $TARGET_PATH"
+            ln -s "$TARGET_PATH" "$SYMLINK_PATH"
+
+            # Ensure .htaccess in backend-app/public handles the /api prefix if accessed via symlink
+            HTACCESS_PATH="$TARGET_PATH/.htaccess"
+            if [ -f "$HTACCESS_PATH" ]; then
+                # Check if RewriteBase /api already exists, if not add it after RewriteEngine On
+                if ! grep -q "RewriteBase /api" "$HTACCESS_PATH"; then
+                    sed -i '/RewriteEngine On/a \    RewriteBase /api' "$HTACCESS_PATH"
+                fi
             fi
