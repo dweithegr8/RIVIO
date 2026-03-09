@@ -110,9 +110,9 @@ jobs:
             grep -q "^APP_KEY=base64:" .env || php artisan key:generate --force
 
             # Create/Update API symlink
-            # This links public_html/api to backend-app/public
+            # This links public_html/api to backend-app/public (Relative path)
             rm -rf /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html/api
-            ln -sfn /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/backend-app/public /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html/api
+            cd /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html && ln -sfn ../backend-app/public api
             
             # Verify symlink
             ls -la /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html/api
