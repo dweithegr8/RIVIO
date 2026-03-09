@@ -106,6 +106,10 @@ jobs:
             SANCTUM_STATEFUL_DOMAINS=${{ secrets.HOSTINGER_DOMAIN }}
             ENVEOF
 
+            # Verify we are in the right place
+            pwd
+            ls -F
+            
             # Generate app key if not set
             grep -q "^APP_KEY=base64:" .env || php artisan key:generate --force
 
@@ -122,5 +126,8 @@ jobs:
             ls -ld /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html/api || echo "Symlink MISSING"
             ls -la /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html/api/ || echo "Cannot list symlink target"
 
+            # Back to backend-app for artisan commands
+            cd /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/backend-app/
+            
             php artisan optimize:clear
             php artisan migrate --force
