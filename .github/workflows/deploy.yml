@@ -45,37 +45,37 @@ jobs:
       - name: Deploy Backend to Hostinger via rsync
         uses: easingthemes/ssh-deploy@main
         with:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_PRIVATE_KEY: ${{ secrets.HOSTINGER_SSH_PRIVATE_KEY }}
           ARGS: "-avz --delete"
-          REMOTE_HOST: ${{ secrets.SSH_SERVER_IP }}
-          REMOTE_USER: ${{ secrets.SSH_USER }}
+          REMOTE_HOST: ${{ secrets.HOSTINGER_SERVER_IP }}
+          REMOTE_USER: ${{ secrets.HOSTINGER_SSH_USER }}
           REMOTE_PORT: 65002
           SOURCE: "backend/"
-          TARGET: "/home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/backend-app/"
+          TARGET: "/home/${{ secrets.HOSTINGER_SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/backend-app/"
           EXCLUDE: "/node_modules/, .env, .git/, /storage/logs/*, /storage/framework/cache/*"
 
       - name: Deploy Frontend to public_html
         uses: easingthemes/ssh-deploy@main
         with:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_PRIVATE_KEY: ${{ secrets.HOSTINGER_SSH_PRIVATE_KEY }}
           ARGS: "-avz --delete"
-          REMOTE_HOST: ${{ secrets.SSH_SERVER_IP }}
-          REMOTE_USER: ${{ secrets.SSH_USER }}
+          REMOTE_HOST: ${{ secrets.HOSTINGER_SERVER_IP }}
+          REMOTE_USER: ${{ secrets.HOSTINGER_SSH_USER }}
           REMOTE_PORT: 65002
           SOURCE: "frontend/dist/"
-          TARGET: "/home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html/"
+          TARGET: "/home/${{ secrets.HOSTINGER_SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html/"
           EXCLUDE: ".git/"
 
       # --- POST-DEPLOYMENT COMMANDS ---
       - name: Run Laravel Migrations and Clear Cache
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.SSH_SERVER_IP }}
-          username: ${{ secrets.SSH_USER }}
+          host: ${{ secrets.HOSTINGER_SERVER_IP }}
+          username: ${{ secrets.HOSTINGER_SSH_USER }}
           port: 65002
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          key: ${{ secrets.HOSTINGER_SSH_PRIVATE_KEY }}
           script: |
-            cd /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/backend-app/
+            cd /home/${{ secrets.HOSTINGER_SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/backend-app/
 
             # Always write fresh .env from GitHub Secrets
             cat > .env << 'ENVEOF'
@@ -135,6 +135,6 @@ jobs:
             # Handle Symlink
             PUBLIC_DIR="$(pwd)/public"
             echo "Linking public dir: $PUBLIC_DIR"
-            cd /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html
+            cd /home/${{ secrets.HOSTINGER_SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html
             rm -rf api
             ln -sf "$PUBLIC_DIR" api
