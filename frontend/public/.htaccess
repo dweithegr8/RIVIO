@@ -1,5 +1,5 @@
 <IfModule mod_rewrite.c>
-  Options +FollowSymLinks -Indexes
+  Options +SymLinksIfOwnerMatch -Indexes
   RewriteEngine On
   RewriteBase /
   

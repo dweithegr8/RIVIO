@@ -112,10 +112,15 @@ jobs:
             # Create/Update API symlink
             # This links public_html/api to backend-app/public (Relative path)
             rm -rf /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html/api
-            cd /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html && ln -sfn ../backend-app/public api
+            cd /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html && ln -sf ../backend-app/public api
             
-            # Verify symlink
-            ls -la /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html/api
+            # Create a test file to verify symlink connectivity
+            echo "Symlink Working" > /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/backend-app/public/test.txt
+
+            # Verify directory structure and symlink
+            echo "--- Checking Directory Structure ---"
+            ls -ld /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html/api || echo "Symlink MISSING"
+            ls -la /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html/api/ || echo "Cannot list symlink target"
 
             php artisan optimize:clear
             php artisan migrate --force
