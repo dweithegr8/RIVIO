@@ -112,22 +112,26 @@ jobs:
             php artisan optimize:clear
             php artisan migrate --force
 
-            # Create API symlink in public_html
+            # Create physical API directory (Robust replacement for Symlinks)
             DOMAIN_PATH="/home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}"
-            SYMLINK_PATH="$DOMAIN_PATH/public_html/api"
-            TARGET_PATH="$DOMAIN_PATH/backend-app/public"
+            API_PATH="$DOMAIN_PATH/public_html/api"
+            LARAVEL_PATH="$DOMAIN_PATH/backend-app"
             
-            # Remove whatever is currently at the symlink path (folder or file)
-            rm -rf "$SYMLINK_PATH"
+            echo "Setting up physical API proxy at $API_PATH"
+            rm -rf "$API_PATH"
+            mkdir -p "$API_PATH"
             
-            echo "Creating symlink: $SYMLINK_PATH -> $TARGET_PATH"
-            ln -s "$TARGET_PATH" "$SYMLINK_PATH"
+            # Copy entry point and htaccess
+            cp "$LARAVEL_PATH/public/index.php" "$API_PATH/index.php"
+            cp "$LARAVEL_PATH/public/.htaccess" "$API_PATH/.htaccess"
 
-            # Ensure .htaccess in backend-app/public handles the /api prefix if accessed via symlink
-            HTACCESS_PATH="$TARGET_PATH/.htaccess"
-            if [ -f "$HTACCESS_PATH" ]; then
-                # Check if RewriteBase /api already exists, if not add it after RewriteEngine On
-                if ! grep -q "RewriteBase /api" "$HTACCESS_PATH"; then
-                    sed -i '/RewriteEngine On/a \    RewriteBase /api' "$HTACCESS_PATH"
-                fi
+            # Update index.php to find the Laravel engine in the sibling folder
+            # We change ../ with ../../backend-app/
+            sed -i 's|__DIR__.\/..\/|__DIR__.\/..\/..\/backend-app\/|g' "$API_PATH/index.php"
+
+            # Fix .htaccess for the /api subdirectory
+            if ! grep -q "RewriteBase /api" "$API_PATH/.htaccess"; then
+                sed -i '/RewriteEngine On/a \    RewriteBase /api' "$API_PATH/.htaccess"
             fi
+            
+            echo "✅ API Routing setup complete!"
