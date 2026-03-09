@@ -111,6 +111,7 @@ jobs:
 
             # Create/Update API symlink
             # This links public_html/api to backend-app/public
+            rm -rf /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html/api
             ln -sfn /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/backend-app/public /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html/api
 
             php artisan optimize:clear
