@@ -34,6 +34,8 @@ jobs:
           node-version: '20'
 
       - name: Install and Build Frontend
+        env:
+          VITE_API_URL: https://${{ secrets.HOSTINGER_DOMAIN }}/api
         run: |
           cd frontend
           npm install
@@ -109,3 +111,12 @@ jobs:
 
             php artisan optimize:clear
             php artisan migrate --force
+
+            # Create API symlink in public_html if it doesn't exist
+            SYMLINK_PATH="/home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html/api"
+            TARGET_PATH="/home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/backend-app/public"
+            
+            if [ ! -L "$SYMLINK_PATH" ]; then
+                echo "Creating symlink: $SYMLINK_PATH -> $TARGET_PATH"
+                ln -s "$TARGET_PATH" "$SYMLINK_PATH"
+            fi
