@@ -109,5 +109,9 @@ jobs:
             # Generate app key if not set
             grep -q "^APP_KEY=base64:" .env || php artisan key:generate --force
 
+            # Create/Update API symlink
+            # This links public_html/api to backend-app/public
+            ln -sfn /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/backend-app/public /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html/api
+
             php artisan optimize:clear
             php artisan migrate --force
