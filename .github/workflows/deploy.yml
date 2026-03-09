@@ -106,28 +106,35 @@ jobs:
             SANCTUM_STATEFUL_DOMAINS=${{ secrets.HOSTINGER_DOMAIN }}
             ENVEOF
 
-            # Verify we are in the right place
-            pwd
-            ls -F
+            # Find where we actually are and where artisan is
+            APP_PATH=$(pwd)
+            ARTISAN_PATH=$(find . -name artisan -print -quit)
             
-            # Generate app key if not set
-            grep -q "^APP_KEY=base64:" .env || php artisan key:generate --force
+            if [ -n "$ARTISAN_PATH" ]; then
+                ARTISAN_DIR=$(dirname "$ARTISAN_PATH")
+                cd "$ARTISAN_DIR"
+                echo "Found artisan at $(pwd)"
+                
+                # Check for .env and key
+                grep -q "^APP_KEY=base64:" .env || php artisan key:generate --force
+                
+                # Fix .htaccess for symlink compatibility
+                if [ -f "public/.htaccess" ]; then
+                    echo "Adjusting public/.htaccess for symlink..."
+                    sed -i '/RewriteEngine On/a \    RewriteBase /api' public/.htaccess
+                fi
 
-            # Create/Update API symlink
-            # This links public_html/api to backend-app/public (Relative path)
-            rm -rf /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html/api
-            cd /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html && ln -sf ../backend-app/public api
-            
-            # Create a test file to verify symlink connectivity
-            echo "Symlink Working" > /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/backend-app/public/test.txt
+                # Run optimizations
+                php artisan optimize:clear
+                php artisan migrate --force
+            else
+                echo "ERROR: Could not find artisan in $APP_PATH"
+                exit 1
+            fi
 
-            # Verify directory structure and symlink
-            echo "--- Checking Directory Structure ---"
-            ls -ld /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html/api || echo "Symlink MISSING"
-            ls -la /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html/api/ || echo "Cannot list symlink target"
-
-            # Back to backend-app for artisan commands
-            cd /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/backend-app/
-            
-            php artisan optimize:clear
-            php artisan migrate --force
+            # Handle Symlink
+            PUBLIC_DIR="$(pwd)/public"
+            echo "Linking public dir: $PUBLIC_DIR"
+            cd /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html
+            rm -rf api
+            ln -sf "$PUBLIC_DIR" api
