@@ -1,0 +1,103 @@
+name: Deploy to Hostinger via SSH
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # --- BACKEND (LARAVEL) BUILD ---
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: dom, curl, libxml, mbstring, zip, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv
+          coverage: none
+
+      - name: Install Composer Dependencies
+        run: |
+          cd backend
+          composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+
+      # --- FRONTEND (REACT) BUILD ---
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install and Build Frontend
+        run: |
+          cd frontend
+          npm install
+          npm run build
+
+      # --- DEPLOYMENT ---
+      - name: Deploy Backend to Hostinger via rsync
+        uses: easingthemes/ssh-deploy@main
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          ARGS: "-avz --delete"
+          REMOTE_HOST: ${{ secrets.SSH_SERVER_IP }}
+          REMOTE_USER: ${{ secrets.SSH_USER }}
+          REMOTE_PORT: 65002
+          SOURCE: "backend/"
+          TARGET: "/home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/backend-app/"
+          EXCLUDE: "/node_modules/, .env, .git/, /storage/logs/*, /storage/framework/cache/*"
+
+      - name: Deploy Frontend to public_html
+        uses: easingthemes/ssh-deploy@main
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          ARGS: "-avz --delete"
+          REMOTE_HOST: ${{ secrets.SSH_SERVER_IP }}
+          REMOTE_USER: ${{ secrets.SSH_USER }}
+          REMOTE_PORT: 65002
+          SOURCE: "frontend/dist/"
+          TARGET: "/home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html/"
+          EXCLUDE: ".git/"
+
+      # --- POST-DEPLOYMENT COMMANDS ---
+      - name: Run Laravel Migrations and Clear Cache
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_SERVER_IP }}
+          username: ${{ secrets.SSH_USER }}
+          port: 65002
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/backend-app/
+
+            # Always write fresh .env from GitHub Secrets
+            cat > .env << 'ENVEOF'
+            APP_NAME="RepuFeed"
+            APP_ENV=production
+            APP_DEBUG=false
+            APP_URL=https://${{ secrets.HOSTINGER_DOMAIN }}
+            APP_KEY=
+
+            SESSION_DRIVER=file
+            SESSION_LIFETIME=120
+
+            CACHE_STORE=file
+            QUEUE_CONNECTION=sync
+            FILESYSTEM_DISK=local
+
+            LOG_CHANNEL=stack
+            LOG_STACK=single
+            LOG_LEVEL=error
+
+            SANCTUM_STATEFUL_DOMAINS=${{ secrets.HOSTINGER_DOMAIN }}
+            ENVEOF
+
+            # Generate app key if not set
+            grep -q "^APP_KEY=base64:" .env || php artisan key:generate --force
+
+            php artisan optimize:clear
