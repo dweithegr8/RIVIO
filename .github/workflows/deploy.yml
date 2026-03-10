@@ -117,25 +117,54 @@ jobs:
             # Create autonomous Laravel bridge with BaseUrl override
             cat > api/index.php << 'PHPEOF'
             <?php
-            define('LARAVEL_START', microtime(true));
-            
-            $autoload = __DIR__.'/../../backend-app/vendor/autoload.php';
-            $bootstrap = __DIR__.'/../../backend-app/bootstrap/app.php';
+            ini_set('display_errors', 1);
+            error_reporting(E_ALL);
 
-            if (!file_exists($autoload)) {
-                die("Bridge Error: Autoload file not found at $autoload");
+            define('LARAVEL_START', microtime(true));
+
+            // Show diagnostic info if ?diag=1
+            if (isset($_GET['diag'])) {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'bridge' => 'alive',
+                    'cwd' => getcwd(),
+                    'script' => $_SERVER['SCRIPT_FILENAME'] ?? 'unknown',
+                    'request_uri' => $_SERVER['REQUEST_URI'] ?? 'unknown',
+                    'autoload_exists' => file_exists(__DIR__.'/../../backend-app/vendor/autoload.php'),
+                    'bootstrap_exists' => file_exists(__DIR__.'/../../backend-app/bootstrap/app.php'),
+                    'php_version' => PHP_VERSION,
+                ]);
+                exit;
             }
 
-            require $autoload;
-            $app = require_once $bootstrap;
-            
-            $request = Illuminate\Http\Request::capture();
-            
-            // FORCE Laravel to see the /api prefix by clearing the auto-detected BaseUrl
-            // This makes the PathInfo include "/api/..." which matches the 'api' routes
-            $request->setBaseUrl('');
+            try {
+                $autoload = __DIR__.'/../../backend-app/vendor/autoload.php';
+                $bootstrap = __DIR__.'/../../backend-app/bootstrap/app.php';
 
-            $app->handleRequest($request);
+                if (!file_exists($autoload)) {
+                    die("Bridge Error: Autoload file not found at $autoload");
+                }
+
+                require $autoload;
+                $app = require_once $bootstrap;
+
+                $request = Illuminate\Http\Request::capture();
+
+                // FORCE Laravel to see the /api prefix by clearing the auto-detected BaseUrl
+                // This makes the PathInfo include "/api/..." which matches the 'api' routes
+                $request->setBaseUrl('');
+
+                $app->handleRequest($request);
+            } catch (\Throwable $e) {
+                header('Content-Type: application/json', true, 500);
+                echo json_encode([
+                    'bridge_error' => true,
+                    'message' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => array_slice(explode("\n", $e->getTraceAsString()), 0, 15),
+                ]);
+            }
             PHPEOF
             chmod 644 api/index.php
 
