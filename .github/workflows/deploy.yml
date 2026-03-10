@@ -81,7 +81,7 @@ jobs:
             cat > .env << 'ENVEOF'
             APP_NAME="Rivio"
             APP_ENV=production
-            APP_DEBUG=false
+            APP_DEBUG=true
             APP_URL=https://${{ secrets.HOSTINGER_DOMAIN }}
             APP_KEY=
 
@@ -106,3 +106,8 @@ jobs:
 
             php artisan optimize:clear
             php artisan migrate --force
+
+            # Create symlink for API access if it doesn't exist
+            # This links public_html/api -> backend-app/public
+            cd /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html/
+            ln -sfn /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/backend-app/public api
