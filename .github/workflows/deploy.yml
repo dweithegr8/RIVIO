@@ -100,3 +100,9 @@ jobs:
 
             php artisan optimize:clear
             php artisan migrate --force --seed
+
+            # Handle Symlink for API routing
+            echo "Linking backend public directory to public_html/api..."
+            cd /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html
+            rm -rf api
+            ln -sf ../backend-app/public api
