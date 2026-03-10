@@ -118,32 +118,22 @@ jobs:
             cat > api/index.php << 'PHPEOF'
             <?php
             define('LARAVEL_START', microtime(true));
-            require __DIR__.'/../../backend-app/vendor/autoload.php';
-            $app = require_once __DIR__.'/../../backend-app/bootstrap/app.php';
+            
+            $autoload = __DIR__.'/../../backend-app/vendor/autoload.php';
+            $bootstrap = __DIR__.'/../../backend-app/bootstrap/app.php';
+
+            if (!file_exists($autoload)) {
+                die("Bridge Error: Autoload file not found at $autoload");
+            }
+
+            require $autoload;
+            $app = require_once $bootstrap;
             
             $request = Illuminate\Http\Request::capture();
             
             // FORCE Laravel to see the /api prefix by clearing the auto-detected BaseUrl
             // This makes the PathInfo include "/api/..." which matches the 'api' routes
             $request->setBaseUrl('');
-            
-            // Final Diagnostics
-            if (isset($_GET['diag'])) {
-                header('Content-Type: text/plain');
-                echo "URI: " . $request->getRequestUri() . "\n";
-                echo "PATH_INFO: " . $request->getPathInfo() . "\n";
-                echo "BASE_URL (forced): '" . $request->getBaseUrl() . "'\n";
-                echo "API_PREFIX: " . env('API_PREFIX') . "\n";
-                
-                echo "\n--- ROUTES ---\n";
-                try {
-                    $router = $app->make('router');
-                    foreach ($router->getRoutes() as $route) {
-                        echo implode('|', $route->methods()) . " " . $route->uri() . "\n";
-                    }
-                } catch (\Exception $e) { echo "Error: " . $e->getMessage(); }
-                exit;
-            }
 
             $app->handleRequest($request);
             PHPEOF
