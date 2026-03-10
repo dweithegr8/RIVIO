@@ -99,7 +99,7 @@ jobs:
             QUEUE_CONNECTION=sync
 
             SANCTUM_STATEFUL_DOMAINS=${{ secrets.HOSTINGER_DOMAIN }}
-            API_PREFIX=
+            API_PREFIX=api
             ENVEOF
 
             # Generate app key if not set
@@ -114,7 +114,7 @@ jobs:
             cd /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html/
             rm -rf api && mkdir -p api
             
-            # Create autonomous Laravel bridge with route diagnostics
+            # Create autonomous Laravel bridge with BaseUrl override
             cat > api/index.php << 'PHPEOF'
             <?php
             define('LARAVEL_START', microtime(true));
@@ -123,24 +123,25 @@ jobs:
             
             $request = Illuminate\Http\Request::capture();
             
-            // Route Diagnostics
+            // FORCE Laravel to see the /api prefix by clearing the auto-detected BaseUrl
+            // This makes the PathInfo include "/api/..." which matches the 'api' routes
+            $request->setBaseUrl('');
+            
+            // Final Diagnostics
             if (isset($_GET['diag'])) {
                 header('Content-Type: text/plain');
                 echo "URI: " . $request->getRequestUri() . "\n";
                 echo "PATH_INFO: " . $request->getPathInfo() . "\n";
-                echo "BASE_URL: " . $request->getBaseUrl() . "\n";
+                echo "BASE_URL (forced): '" . $request->getBaseUrl() . "'\n";
+                echo "API_PREFIX: " . env('API_PREFIX') . "\n";
                 
-                echo "\n--- REGISTERED ROUTES ---\n";
+                echo "\n--- ROUTES ---\n";
                 try {
                     $router = $app->make('router');
-                    $routes = $router->getRoutes();
-                    foreach ($routes as $route) {
+                    foreach ($router->getRoutes() as $route) {
                         echo implode('|', $route->methods()) . " " . $route->uri() . "\n";
                     }
-                } catch (\Exception $e) {
-                    echo "Error loading routes: " . $e->getMessage() . "\n";
-                }
-                echo "\n--- END ---\n";
+                } catch (\Exception $e) { echo "Error: " . $e->getMessage(); }
                 exit;
             }
 
