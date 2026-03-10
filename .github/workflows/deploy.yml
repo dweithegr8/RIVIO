@@ -108,7 +108,14 @@ jobs:
             php artisan optimize:clear
             php artisan migrate --force
 
-            # Create symlink for API access
-            # We use a relative path here (../backend-app/public) for better compatibility
+            # Create a real api/ directory with a bridge index.php
+            # This is more compatible with Hostinger than symlinks
             cd /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html/
-            rm -rf api && ln -s ../backend-app/public api
+            rm -rf api && mkdir -p api
+            cat > api/index.php << 'PHPEOF'
+            <?php
+            // Bridge to Laravel Backend
+            require __DIR__.'/../../backend-app/public/index.php';
+            PHPEOF
+            # Ensure proper permissions
+            chmod 644 api/index.php
