@@ -116,10 +116,18 @@ jobs:
             echo "canary ok" > api/canary.php
             chmod 644 api/canary.php
 
-            # Create autonomous Laravel bridge
+            # Create autonomous Laravel bridge with debug logging
             cat > api/index.php << 'PHPEOF'
             <?php
             define('LARAVEL_START', microtime(true));
+            
+            // Debug connectivity
+            if (isset($_GET['debug_bridge'])) {
+                echo "URI: " . $_SERVER['REQUEST_URI'] . "\n";
+                echo "DIR: " . __DIR__ . "\n";
+                exit;
+            }
+
             require __DIR__.'/../../backend-app/vendor/autoload.php';
             $app = require_once __DIR__.'/../../backend-app/bootstrap/app.php';
             $app->handleRequest(Illuminate\Http\Request::capture());
