@@ -131,9 +131,14 @@ jobs:
                 echo "BASE_URL: " . $request->getBaseUrl() . "\n";
                 
                 echo "\n--- REGISTERED ROUTES ---\n";
-                $routes = Route::getRoutes();
-                foreach ($routes as $route) {
-                    echo implode('|', $route->methods()) . " " . $route->uri() . "\n";
+                try {
+                    $router = $app->make('router');
+                    $routes = $router->getRoutes();
+                    foreach ($routes as $route) {
+                        echo implode('|', $route->methods()) . " " . $route->uri() . "\n";
+                    }
+                } catch (\Exception $e) {
+                    echo "Error loading routes: " . $e->getMessage() . "\n";
                 }
                 echo "\n--- END ---\n";
                 exit;
