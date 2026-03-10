@@ -86,7 +86,7 @@ jobs:
             APP_KEY=
 
             DB_CONNECTION=mysql
-            DB_HOST=127.0.0.1
+            DB_HOST=localhost
             DB_PORT=3306
             DB_DATABASE=${{ secrets.DB_DATABASE }}
             DB_USERNAME=${{ secrets.DB_USERNAME }}
@@ -95,7 +95,7 @@ jobs:
             CACHE_DRIVER=file
             SESSION_DRIVER=file
             SESSION_LIFETIME=120
-            SESSION_DOMAIN=${{ secrets.HOSTINGER_DOMAIN }}
+            SESSION_DOMAIN=.${{ secrets.HOSTINGER_DOMAIN }}
             QUEUE_CONNECTION=sync
 
             SANCTUM_STATEFUL_DOMAINS=${{ secrets.HOSTINGER_DOMAIN }}
@@ -114,7 +114,7 @@ jobs:
             cd /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html/
             rm -rf api && mkdir -p api
             
-            # Create autonomous Laravel bridge with BaseUrl override
+            # Create autonomous Laravel bridge with BaseUrl override fix
             cat > api/index.php << 'PHPEOF'
             <?php
             define('LARAVEL_START', microtime(true));
