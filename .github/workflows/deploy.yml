@@ -99,7 +99,7 @@ jobs:
             QUEUE_CONNECTION=sync
 
             SANCTUM_STATEFUL_DOMAINS=${{ secrets.HOSTINGER_DOMAIN }}
-            API_PREFIX=api
+            API_PREFIX=
             ENVEOF
 
             # Generate app key if not set
@@ -123,7 +123,10 @@ jobs:
             
             // Debug connectivity
             if (isset($_GET['debug_bridge'])) {
+                header('Content-Type: text/plain');
                 echo "URI: " . $_SERVER['REQUEST_URI'] . "\n";
+                echo "SCRIPT: " . $_SERVER['SCRIPT_NAME'] . "\n";
+                echo "PATH: " . ($_SERVER['PATH_INFO'] ?? 'N/A') . "\n";
                 echo "DIR: " . __DIR__ . "\n";
                 exit;
             }
@@ -136,11 +139,9 @@ jobs:
 
             # Create helper .htaccess for the api directory
             cat > api/.htaccess << 'HTACCESS'
-            <IfModule mod_rewrite.c>
-                RewriteEngine On
-                RewriteCond %{REQUEST_FILENAME} !-f
-                RewriteCond %{REQUEST_FILENAME} !-d
-                RewriteRule ^(.*)$ index.php [L,QSA]
-            </IfModule>
+            RewriteEngine On
+            RewriteCond %{REQUEST_FILENAME} !-f
+            RewriteCond %{REQUEST_FILENAME} !-d
+            RewriteRule . index.php [L]
             HTACCESS
             chmod 644 api/.htaccess
