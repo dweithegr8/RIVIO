@@ -99,4 +99,4 @@ jobs:
             grep -q "^APP_KEY=base64:" .env || php artisan key:generate --force
 
             php artisan optimize:clear
-            php artisan migrate --force --seed
+            php artisan migrate --force
