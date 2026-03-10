@@ -64,7 +64,7 @@ jobs:
           TARGET: "/home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html/"
           EXCLUDE: ".git/"
 
-      # --- POST-DEPLOYMENT COMMANDS (Optional but recommended) ---
+      # --- POST-DEPLOYMENT COMMANDS ---
       - name: Run Laravel Migrations and Clear Cache
         uses: appleboy/ssh-action@master
         with:
@@ -100,9 +100,3 @@ jobs:
 
             php artisan optimize:clear
             php artisan migrate --force --seed
-
-            # Handle Symlink for API routing
-            echo "Linking backend public directory to public_html/api..."
-            cd /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html
-            rm -rf api
-            ln -sf ../backend-app/public api

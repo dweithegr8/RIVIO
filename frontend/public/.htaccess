@@ -1,5 +1,4 @@
 <IfModule mod_rewrite.c>
-  Options +SymLinksIfOwnerMatch -Indexes
   RewriteEngine On
   RewriteBase /
   
@@ -15,7 +14,6 @@
   # Handle Front Controller (SPA)
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_URI} !^/api/ [NC]
   RewriteRule ^ index.html [L]
 </IfModule>
 
