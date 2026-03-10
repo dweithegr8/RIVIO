@@ -106,6 +106,8 @@ jobs:
             grep -q "^APP_KEY=base64:" .env || php artisan key:generate --force
 
             php artisan optimize:clear
+            php artisan config:clear
+            php artisan route:clear
             php artisan migrate --force
 
             # Create a real api/ directory with a robust bridge
@@ -124,12 +126,9 @@ jobs:
 
             # Create helper .htaccess for the api directory
             cat > api/.htaccess << 'HTACCESS'
-            <IfModule mod_rewrite.c>
-                RewriteEngine On
-                RewriteBase /api/
-                RewriteCond %{REQUEST_FILENAME} !-f
-                RewriteCond %{REQUEST_FILENAME} !-d
-                RewriteRule ^(.*)$ index.php [L,QSA]
-            </IfModule>
+            RewriteEngine On
+            RewriteCond %{REQUEST_FILENAME} !-f
+            RewriteCond %{REQUEST_FILENAME} !-d
+            RewriteRule ^ index.php [L]
             HTACCESS
             chmod 644 api/.htaccess
