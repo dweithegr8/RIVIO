@@ -64,7 +64,7 @@ jobs:
           REMOTE_PORT: 65002
           SOURCE: "frontend/dist/"
           TARGET: "/home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html/"
-          EXCLUDE: ".git/"
+          EXCLUDE: ".git/, /api"
 
       # --- POST-DEPLOYMENT COMMANDS ---
       - name: Run Laravel Migrations and Clear Cache
