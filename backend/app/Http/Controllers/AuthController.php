@@ -39,6 +39,9 @@ class AuthController extends Controller
             Log::error('Login error', ['error' => $e->getMessage()]);
             return response()->json([
                 'message' => 'An error occurred during login',
+                'debug_error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
             ], 500);
         }
     }

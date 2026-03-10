@@ -117,25 +117,7 @@ jobs:
             # Create autonomous Laravel bridge with BaseUrl override
             cat > api/index.php << 'PHPEOF'
             <?php
-            ini_set('display_errors', 1);
-            error_reporting(E_ALL);
-
             define('LARAVEL_START', microtime(true));
-
-            // Show diagnostic info if ?diag=1
-            if (isset($_GET['diag'])) {
-                header('Content-Type: application/json');
-                echo json_encode([
-                    'bridge' => 'alive',
-                    'cwd' => getcwd(),
-                    'script' => $_SERVER['SCRIPT_FILENAME'] ?? 'unknown',
-                    'request_uri' => $_SERVER['REQUEST_URI'] ?? 'unknown',
-                    'autoload_exists' => file_exists(__DIR__.'/../../backend-app/vendor/autoload.php'),
-                    'bootstrap_exists' => file_exists(__DIR__.'/../../backend-app/bootstrap/app.php'),
-                    'php_version' => PHP_VERSION,
-                ]);
-                exit;
-            }
 
             try {
                 $autoload = __DIR__.'/../../backend-app/vendor/autoload.php';
@@ -160,7 +142,7 @@ jobs:
                     'message' => $e->getMessage(),
                     'file' => $e->getFile(),
                     'line' => $e->getLine(),
-                    'trace' => array_slice(explode("\n", $e->getTraceAsString()), 0, 15),
+                    'trace' => array_slice(explode("\n", $e->getTraceAsString()), 0, 10),
                 ]);
             }
             PHPEOF
