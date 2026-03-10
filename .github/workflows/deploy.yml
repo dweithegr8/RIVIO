@@ -99,7 +99,7 @@ jobs:
             QUEUE_CONNECTION=sync
 
             SANCTUM_STATEFUL_DOMAINS=${{ secrets.HOSTINGER_DOMAIN }}
-            API_PREFIX=
+            API_PREFIX=api
             ENVEOF
 
             # Generate app key if not set
@@ -108,7 +108,7 @@ jobs:
             php artisan optimize:clear
             php artisan migrate --force
 
-            # Create symlink for API access if it doesn't exist
-            # This links public_html/api -> backend-app/public
+            # Create symlink for API access
+            # We use a relative path here (../backend-app/public) for better compatibility
             cd /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html/
-            ln -sfn /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/backend-app/public api
+            rm -rf api && ln -s ../backend-app/public api
