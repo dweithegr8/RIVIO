@@ -145,16 +145,14 @@ jobs:
                     die("Bridge Error: Autoload file not found at $autoload");
                 }
 
+                // Override SCRIPT_NAME so Symfony computes BaseUrl='' and PathInfo='/api/...'
+                $_SERVER['SCRIPT_NAME'] = '/index.php';
+                $_SERVER['SCRIPT_FILENAME'] = __DIR__ . '/index.php';
+
                 require $autoload;
                 $app = require_once $bootstrap;
 
-                $request = Illuminate\Http\Request::capture();
-
-                // FORCE Laravel to see the /api prefix by clearing the auto-detected BaseUrl
-                // This makes the PathInfo include "/api/..." which matches the 'api' routes
-                $request->setBaseUrl('');
-
-                $app->handleRequest($request);
+                $app->handleRequest(Illuminate\Http\Request::capture());
             } catch (\Throwable $e) {
                 header('Content-Type: application/json', true, 500);
                 echo json_encode([
