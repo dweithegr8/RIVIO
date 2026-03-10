@@ -34,15 +34,13 @@ jobs:
           node-version: '20'
 
       - name: Install and Build Frontend
-        env:
-          VITE_API_URL: https://${{ secrets.HOSTINGER_DOMAIN }}/api
         run: |
           cd frontend
           npm install
           npm run build
 
       # --- DEPLOYMENT ---
-      - name: Deploy Backend to Hostinger via rsync
+      - name: Deploy to Hostinger via rsync
         uses: easingthemes/ssh-deploy@main
         with:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -53,7 +51,7 @@ jobs:
           SOURCE: "backend/"
           TARGET: "/home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/backend-app/"
           EXCLUDE: "/node_modules/, .env, .git/, /storage/logs/*, /storage/framework/cache/*"
-
+        
       - name: Deploy Frontend to public_html
         uses: easingthemes/ssh-deploy@main
         with:
@@ -66,7 +64,7 @@ jobs:
           TARGET: "/home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html/"
           EXCLUDE: ".git/"
 
-      # --- POST-DEPLOYMENT COMMANDS ---
+      # --- POST-DEPLOYMENT COMMANDS (Optional but recommended) ---
       - name: Run Laravel Migrations and Clear Cache
         uses: appleboy/ssh-action@master
         with:
@@ -79,55 +77,26 @@ jobs:
 
             # Always write fresh .env from GitHub Secrets
             cat > .env << 'ENVEOF'
-            APP_NAME="RepuFeed"
+            APP_NAME="TMC FoodHub"
             APP_ENV=production
             APP_DEBUG=false
             APP_URL=https://${{ secrets.HOSTINGER_DOMAIN }}
             APP_KEY=
 
             DB_CONNECTION=mysql
-            DB_HOST=localhost
+            DB_HOST=127.0.0.1
             DB_PORT=3306
-            DB_DATABASE="${{ secrets.DB_DATABASE }}"
-            DB_USERNAME="${{ secrets.DB_USERNAME }}"
-            DB_PASSWORD="${{ secrets.DB_PASSWORD }}"
+            DB_DATABASE=${{ secrets.DB_DATABASE }}
+            DB_USERNAME=${{ secrets.DB_USERNAME }}
+            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
 
+            CACHE_DRIVER=file
             SESSION_DRIVER=file
-            SESSION_LIFETIME=120
-
-            CACHE_STORE=file
-            QUEUE_CONNECTION=sync
-            FILESYSTEM_DISK=local
-
-            LOG_CHANNEL=stack
-            LOG_STACK=single
-            LOG_LEVEL=error
-
-            SANCTUM_STATEFUL_DOMAINS=${{ secrets.HOSTINGER_DOMAIN }}
+            QUEUE_DRIVER=sync
             ENVEOF
 
-            # Find where we actually are and where artisan is
-            APP_PATH=$(pwd)
-            ARTISAN_PATH=$(find . -name artisan -print -quit)
-            
-            if [ -n "$ARTISAN_PATH" ]; then
-                ARTISAN_DIR=$(dirname "$ARTISAN_PATH")
-                cd "$ARTISAN_DIR"
-                echo "Found artisan at $(pwd)"
-                
-                # Check for .env and key
-                grep -q "^APP_KEY=base64:" .env || php artisan key:generate --force
-                
-                # Run optimizations
-                php artisan optimize:clear
-                php artisan migrate --force
-            else
-                echo "ERROR: Could not find artisan in $APP_PATH"
-                exit 1
-            fi
+            # Generate app key if not set
+            grep -q "^APP_KEY=base64:" .env || php artisan key:generate --force
 
-            # Handle Symlink (Using relative path for stability on Hostinger)
-            echo "Linking backend public directory to public_html/api..."
-            cd /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html
-            rm -rf api
-            ln -sf ../backend-app/public api
+            php artisan optimize:clear
+            php artisan migrate --force --seed
