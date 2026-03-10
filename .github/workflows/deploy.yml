@@ -99,7 +99,7 @@ jobs:
             QUEUE_CONNECTION=sync
 
             SANCTUM_STATEFUL_DOMAINS=${{ secrets.HOSTINGER_DOMAIN }}
-            API_PREFIX=api
+            API_PREFIX=
             ENVEOF
 
             # Generate app key if not set
@@ -112,25 +112,10 @@ jobs:
             cd /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html/
             rm -rf api && mkdir -p api
             
-            # Add canary file for verification
-            echo "canary ok" > api/canary.php
-            chmod 644 api/canary.php
-
-            # Create autonomous Laravel bridge with debug logging
+            # Create autonomous Laravel bridge
             cat > api/index.php << 'PHPEOF'
             <?php
             define('LARAVEL_START', microtime(true));
-            
-            // Debug connectivity
-            if (isset($_GET['debug_bridge'])) {
-                header('Content-Type: text/plain');
-                echo "URI: " . $_SERVER['REQUEST_URI'] . "\n";
-                echo "SCRIPT: " . $_SERVER['SCRIPT_NAME'] . "\n";
-                echo "PATH: " . ($_SERVER['PATH_INFO'] ?? 'N/A') . "\n";
-                echo "DIR: " . __DIR__ . "\n";
-                exit;
-            }
-
             require __DIR__.'/../../backend-app/vendor/autoload.php';
             $app = require_once __DIR__.'/../../backend-app/bootstrap/app.php';
             $app->handleRequest(Illuminate\Http\Request::capture());
@@ -142,10 +127,6 @@ jobs:
             <IfModule mod_rewrite.c>
                 RewriteEngine On
                 RewriteBase /api/
-                
-                # Test if rewrites work
-                RewriteRule ^test-rewrite$ canary.php [L]
-
                 RewriteCond %{REQUEST_FILENAME} !-f
                 RewriteCond %{REQUEST_FILENAME} !-d
                 RewriteRule ^(.*)$ index.php [L,QSA]
