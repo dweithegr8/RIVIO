@@ -53,7 +53,8 @@ export const LiveFeedbackProvider = ({ children }) => {
             ]);
 
             const newStats = statsResponse.data;
-            const feedbackData = feedbackResponse.data?.data ?? feedbackResponse.data ?? [];
+            const feedbackDataRaw = feedbackResponse.data?.data ?? feedbackResponse.data;
+            const feedbackData = Array.isArray(feedbackDataRaw) ? feedbackDataRaw : [];
 
             // Detect new feedback
             if (knownIds.current.size > 0) {

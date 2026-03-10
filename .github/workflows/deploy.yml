@@ -99,7 +99,7 @@ jobs:
             QUEUE_CONNECTION=sync
 
             SANCTUM_STATEFUL_DOMAINS=${{ secrets.HOSTINGER_DOMAIN }}
-            API_PREFIX=api
+            API_PREFIX=
             ENVEOF
 
             # Generate app key if not set
@@ -119,3 +119,15 @@ jobs:
             PHPEOF
             # Ensure proper permissions
             chmod 644 api/index.php
+
+            # Create helper .htaccess for the api directory
+            cat > api/.htaccess << 'HTACCESS'
+            <IfModule mod_rewrite.c>
+                RewriteEngine On
+                RewriteBase /api/
+                RewriteCond %{REQUEST_FILENAME} !-f
+                RewriteCond %{REQUEST_FILENAME} !-d
+                RewriteRule . index.php [L]
+            </IfModule>
+            HTACCESS
+            chmod 644 api/.htaccess
