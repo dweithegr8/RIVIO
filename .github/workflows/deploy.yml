@@ -79,7 +79,7 @@ jobs:
 
             # Always write fresh .env from GitHub Secrets
             cat > .env << 'ENVEOF'
-            APP_NAME="TMC FoodHub"
+            APP_NAME="Rivio"
             APP_ENV=production
             APP_DEBUG=false
             APP_URL=https://${{ secrets.HOSTINGER_DOMAIN }}
@@ -94,7 +94,11 @@ jobs:
 
             CACHE_DRIVER=file
             SESSION_DRIVER=file
-            QUEUE_DRIVER=sync
+            SESSION_LIFETIME=120
+            SESSION_DOMAIN=${{ secrets.HOSTINGER_DOMAIN }}
+            QUEUE_CONNECTION=sync
+
+            SANCTUM_STATEFUL_DOMAINS=${{ secrets.HOSTINGER_DOMAIN }}
             ENVEOF
 
             # Generate app key if not set
