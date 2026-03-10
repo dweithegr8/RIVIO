@@ -118,12 +118,6 @@ jobs:
                 # Check for .env and key
                 grep -q "^APP_KEY=base64:" .env || php artisan key:generate --force
                 
-                # Fix .htaccess for symlink compatibility
-                if [ -f "public/.htaccess" ]; then
-                    echo "Adjusting public/.htaccess for symlink..."
-                    sed -i '/RewriteEngine On/a \    RewriteBase /api' public/.htaccess
-                fi
-
                 # Run optimizations
                 php artisan optimize:clear
                 php artisan migrate --force
@@ -132,9 +126,8 @@ jobs:
                 exit 1
             fi
 
-            # Handle Symlink
-            PUBLIC_DIR="$(pwd)/public"
-            echo "Linking public dir: $PUBLIC_DIR"
+            # Handle Symlink (Using relative path for stability on Hostinger)
+            echo "Linking backend public directory to public_html/api..."
             cd /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html
             rm -rf api
-            ln -sf "$PUBLIC_DIR" api
+            ln -sf ../backend-app/public api
