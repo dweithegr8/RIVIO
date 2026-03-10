@@ -114,13 +114,32 @@ jobs:
             cd /home/${{ secrets.SSH_USER }}/domains/${{ secrets.HOSTINGER_DOMAIN }}/public_html/
             rm -rf api && mkdir -p api
             
-            # Create autonomous Laravel bridge
+            # Create autonomous Laravel bridge with route diagnostics
             cat > api/index.php << 'PHPEOF'
             <?php
             define('LARAVEL_START', microtime(true));
             require __DIR__.'/../../backend-app/vendor/autoload.php';
             $app = require_once __DIR__.'/../../backend-app/bootstrap/app.php';
-            $app->handleRequest(Illuminate\Http\Request::capture());
+            
+            $request = Illuminate\Http\Request::capture();
+            
+            // Route Diagnostics
+            if (isset($_GET['diag'])) {
+                header('Content-Type: text/plain');
+                echo "URI: " . $request->getRequestUri() . "\n";
+                echo "PATH_INFO: " . $request->getPathInfo() . "\n";
+                echo "BASE_URL: " . $request->getBaseUrl() . "\n";
+                
+                echo "\n--- REGISTERED ROUTES ---\n";
+                $routes = Route::getRoutes();
+                foreach ($routes as $route) {
+                    echo implode('|', $route->methods()) . " " . $route->uri() . "\n";
+                }
+                echo "\n--- END ---\n";
+                exit;
+            }
+
+            $app->handleRequest($request);
             PHPEOF
             chmod 644 api/index.php
 
