@@ -16,6 +16,13 @@ api.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
+    // Add subscription token for paywall enforcement
+    const subToken = localStorage.getItem('rivio_subscribed');
+    if (subToken === 'true') {
+      config.headers['X-Subscription-Token'] = 'rivio_premium_unlocked';
+    }
+    
     return config;
   },
   (error) => {

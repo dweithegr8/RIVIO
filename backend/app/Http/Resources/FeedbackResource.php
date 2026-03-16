@@ -30,6 +30,7 @@ class FeedbackResource extends JsonResource
             'rating' => (int) $this->rating,
             'is_approved' => (bool) $this->is_approved,
             'is_hidden' => (bool) $this->is_hidden,
+            'is_locked' => $this->resource->is_locked ?? false,
             'status' => $status,
             'created_at' => $this->created_at?->toIso8601String(),
             'date' => $this->created_at?->toIso8601String(), // Alias

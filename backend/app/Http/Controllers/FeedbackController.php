@@ -58,13 +58,33 @@ class FeedbackController extends Controller
 
         $column = $sort === 'rating' ? 'rating' : 'created_at';
 
+        // Check for subscription (Mock token check)
+        $isSubscribed = $request->header('X-Subscription-Token') === 'rivio_premium_unlocked' 
+                        || $request->header('X-Subscription-Token') === 'true';
+
         // Paginate approved feedback
         $paginated = Feedback::where('is_approved', true)
             ->orderBy($column, $order)
             ->paginate($limit, ['*'], 'page', $page);
 
+        $items = $paginated->items();
+        
+        // Apply redaction if not subscribed
+        foreach ($items as $index => $item) {
+            $isFree = ($page === 1 && $index < 2); // First 2 reviews on page 1 are free
+            
+            if (!$isSubscribed && !$isFree) {
+                // Redact the message
+                $originalMessage = $item->message;
+                $item->message = substr($originalMessage, 0, 50) . '... [Content Locked]';
+                $item->is_locked = true;
+            } else {
+                $item->is_locked = false;
+            }
+        }
+
         return response()->json([
-            'data' => FeedbackResource::collection($paginated->items()),
+            'data' => FeedbackResource::collection($items),
             'pagination' => [
                 'total' => $paginated->total(),
                 'per_page' => $paginated->perPage(),
@@ -73,6 +93,7 @@ class FeedbackController extends Controller
                 'from' => $paginated->firstItem(),
                 'to' => $paginated->lastItem(),
             ],
+            'is_subscribed' => $isSubscribed
         ]);
     }
 

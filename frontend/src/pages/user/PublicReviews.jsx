@@ -5,7 +5,6 @@ import AdBanner from '../../components/common/AdBanner';
 import { feedbackAPI, settingsAPI, paymentAPI } from '../../services/api';
 
 const POLL_INTERVAL = 5000;
-const FREE_REVIEW_LIMIT = 2;
 
 const PublicReviews = () => {
   const [sortBy, setSortBy] = useState('date');
@@ -243,13 +242,13 @@ const PublicReviews = () => {
   const showRatingsBreakdown = settings.showRatingsBreakdown !== false;
 
   // Split reviews into free and blurred
-  const freeReviews = hasSubscription ? filteredReviews : filteredReviews.slice(0, FREE_REVIEW_LIMIT);
-  const blurredReviews = hasSubscription ? [] : filteredReviews.slice(FREE_REVIEW_LIMIT);
+  const freeReviews = filteredReviews.filter(r => !r.is_locked);
+  const blurredReviews = filteredReviews.filter(r => r.is_locked);
 
   // Review card component
-  const ReviewCard = ({ review, isBlurred = false }) => (
-    <div className={`card relative ${isBlurred ? 'select-none pointer-events-none' : ''}`}>
-      <div className={isBlurred ? 'blur-[6px]' : ''}>
+  const ReviewCard = ({ review, isLocked = false }) => (
+    <div className={`card relative ${isLocked ? 'select-none pointer-events-none' : ''}`}>
+      <div className={review.is_locked ? 'blur-[6px]' : ''}>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-brand-primary/20 rounded-full flex items-center justify-center">
@@ -425,7 +424,7 @@ const PublicReviews = () => {
                           {/* Blurred review cards */}
                           <div className="space-y-4">
                             {blurredReviews.map((review) => (
-                              <ReviewCard key={review.id} review={review} isBlurred />
+                              <ReviewCard key={review.id} review={review} isLocked />
                             ))}
                           </div>
 
@@ -486,9 +485,9 @@ const PublicReviews = () => {
                   {/* Results count */}
                   {!isLoading && reviews.length > 0 && (
                     <p className="text-center text-neutral-500 text-sm">
-                      Showing {hasSubscription ? filteredReviews.length : Math.min(FREE_REVIEW_LIMIT, filteredReviews.length)} of {reviewsAboveMin.length} reviews
+                      Showing {freeReviews.length} of {reviewsAboveMin.length} reviews
                       {minimumRating > 1 && ` (rating ${minimumRating}+ only)`}
-                      {!hasSubscription && filteredReviews.length > FREE_REVIEW_LIMIT && (
+                      {blurredReviews.length > 0 && (
                         <span className="text-brand-primary font-medium"> · Subscribe to see all</span>
                       )}
                     </p>
