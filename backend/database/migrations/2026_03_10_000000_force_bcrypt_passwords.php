@@ -4,7 +4,7 @@ use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\Hash;
 
-return new class extends Migration
+return new class extends Migration 
 {
     /**
      * Run the migrations to fix passwords that aren't hashed with Bcrypt.
@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         $emails = ['admin@example.com', 'test@example.com'];
-        
+
         foreach ($emails as $email) {
             $user = User::where('email', $email)->first();
             if ($user) {
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // No reverse needed for a data fix
+    // No reverse needed for a data fix
     }
 };

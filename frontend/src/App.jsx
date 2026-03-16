@@ -15,6 +15,7 @@ import TermsOfService from './pages/user/TermsOfService';
 import AdminLogin from './pages/admin/AdminLogin';
 import Dashboard from './pages/admin/Dashboard';
 import FeedbackManagement from './pages/admin/FeedbackManagement';
+import Subscriptions from './pages/admin/Subscriptions';
 import Settings from './pages/admin/Settings';
 
 // Layouts
@@ -41,6 +42,7 @@ function App() {
           <Route path="/admin" element={<AdminLayout />}>
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="feedback" element={<FeedbackManagement />} />
+            <Route path="subscriptions" element={<Subscriptions />} />
             <Route path="settings" element={<Settings />} />
           </Route>
         </Routes>

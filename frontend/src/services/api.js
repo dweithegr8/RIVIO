@@ -85,6 +85,8 @@ export const paymentAPI = {
   validateCard: (cardNumber) => api.post('/payment/validate-card', { card_number: cardNumber }),
   // Process subscription
   subscribe: (data) => api.post('/payment/subscribe', data),
+  // Get all subscriptions (admin)
+  getSubscriptions: () => api.get('/admin/subscriptions'),
 };
 
 export default api;

@@ -9,6 +9,26 @@ use Illuminate\Support\Facades\Hash;
 class PaymentController extends Controller
 {
     /**
+     * List all subscriptions (admin).
+     * GET /api/admin/subscriptions
+     */
+    public function index()
+    {
+        try {
+            $subscriptions = UsedCard::orderBy('created_at', 'desc')->get();
+            return response()->json([
+                'success' => true,
+                'data' => $subscriptions
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to fetch subscriptions.'
+            ], 500);
+        }
+    }
+
+    /**
      * Hash a card number using SHA-256.
      */
     private function hashCard(string $cardNumber): string

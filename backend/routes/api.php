@@ -34,6 +34,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Admin settings management
     Route::get('/settings', [SettingsController::class , 'index']);
     Route::put('/settings', [SettingsController::class , 'update']);
+
+    // Admin subscription management
+    Route::get('/admin/subscriptions', [PaymentController::class, 'index']);
 });
 
 // ========== PUBLIC ROUTES ==========

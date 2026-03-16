@@ -36,13 +36,14 @@ class SettingsController extends Controller
             $value = $row ? json_decode($row->value, true) : null;
             $defaults = self::defaults();
             return is_array($value) ? array_merge($defaults, $value) : $defaults;
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e) {
             // ...existing code...
             return self::defaults();
         }
     }
 
-    public function public(): \Illuminate\Http\JsonResponse
+    public function public (): \Illuminate\Http\JsonResponse
     {
         try {
             // ...existing code...
@@ -59,7 +60,8 @@ class SettingsController extends Controller
                 $public[$key] = $all[$key] ?? self::defaults()[$key];
             }
             return response()->json($public, 200);
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e) {
             // ...existing code...
             return response()->json([
                 'message' => 'An error occurred while retrieving public settings.',
@@ -73,7 +75,8 @@ class SettingsController extends Controller
         try {
             $settings = self::getMerged();
             return response()->json($settings, 200);
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e) {
             return response()->json([
                 'message' => 'An error occurred while retrieving settings.',
             ], 500);
@@ -91,12 +94,13 @@ class SettingsController extends Controller
             $merged = is_array($current) ? array_merge(self::defaults(), $current, $validated) : array_merge(self::defaults(), $validated);
 
             Setting::updateOrCreate(
-                ['key' => self::SETTINGS_KEY],
-                ['value' => json_encode($merged)]
+            ['key' => self::SETTINGS_KEY],
+            ['value' => json_encode($merged)]
             );
 
             return response()->json($merged, 200);
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e) {
             return response()->json([
                 'message' => 'An error occurred while updating settings.',
             ], 500);

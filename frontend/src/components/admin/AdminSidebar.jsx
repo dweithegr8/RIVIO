@@ -1,6 +1,6 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { LayoutDashboard, MessageSquare, Settings, LogOut, Loader2, X } from 'lucide-react';
+import { LayoutDashboard, MessageSquare, Settings, LogOut, Loader2, X, CreditCard } from 'lucide-react';
 
 const AdminSidebar = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
@@ -9,6 +9,7 @@ const AdminSidebar = ({ isOpen, onClose }) => {
   const navItems = [
     { name: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },
     { name: 'Feedback', path: '/admin/feedback', icon: MessageSquare },
+    { name: 'Subscriptions', path: '/admin/subscriptions', icon: CreditCard },
     { name: 'Settings', path: '/admin/settings', icon: Settings },
   ];
 
